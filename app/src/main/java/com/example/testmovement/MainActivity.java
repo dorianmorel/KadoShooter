@@ -3,12 +3,16 @@ package com.example.testmovement;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,103 +23,131 @@ public class MainActivity extends AppCompatActivity {
 
     private int nbClick = 0;
     private ImageView button;
+    //private ArrayList<GifImageView> imgs = new ArrayList<>();
+    private GifImageView[] gifs = new GifImageView[50];
+    private String[][] directions = new String[50][2];
+
+    private String[] topbot = new String[2];
+    private String[] leftright = new String[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int displayWidth = displayMetrics.widthPixels;
+        int displayHeight = displayMetrics.heightPixels;
+
         RelativeLayout ecran = (RelativeLayout) findViewById(R.id.ecran);
-        GifImageView gif1 = new GifImageView(this);
-        gif1.setImageResource(R.drawable.koopa);
-        gif1.setLayoutParams(new RelativeLayout.LayoutParams(300,300));
-        RelativeLayout.LayoutParams layoutParams1 =
-                (RelativeLayout.LayoutParams)gif1.getLayoutParams();
-        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-        gif1.setLayoutParams(layoutParams1);
-        gif1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+
+        topbot[0] = "TOP";
+        topbot[1] = "BOT";
+        leftright[0] = "LEFT";
+        leftright[1] = "RIGHT";
+
+        for (int i=0; i < 50; i++) {
+
+            GifImageView gif = new GifImageView(this);
+            gif.setImageResource(R.drawable.koopa);
+            gif.setLayoutParams(new RelativeLayout.LayoutParams(300,300));
+
+            gif.setX((int)(Math.random() * displayWidth));
+            gif.setY((int)(Math.random() * displayHeight));
+
+            gif.setOnClickListener(v -> {
+
+                System.out.println("CLICK");
                 v.setVisibility(View.GONE);
-            }
-        });
+            });
 
-        GifImageView gif2 = new GifImageView(this);
-        gif2.setImageResource(R.drawable.koopa);
-        gif2.setLayoutParams(new RelativeLayout.LayoutParams(300,300));
-        RelativeLayout.LayoutParams layoutParams2 =
-                (RelativeLayout.LayoutParams)gif2.getLayoutParams();
-        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        gif2.setLayoutParams(layoutParams2);
-        gif2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.setVisibility(View.GONE);
-            }
-        });
+            ecran.addView(gif);
+            gifs[i] = gif;
 
-        GifImageView gif3 = new GifImageView(this);
-        gif3.setImageResource(R.drawable.koopa);
-        gif3.setLayoutParams(new RelativeLayout.LayoutParams(300,300));
-        RelativeLayout.LayoutParams layoutParams3 =
-                (RelativeLayout.LayoutParams)gif3.getLayoutParams();
-        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        gif3.setLayoutParams(layoutParams3);
-        gif3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.setVisibility(View.GONE);
-            }
-        });
+            int randX = new Random().nextInt(leftright.length);
+            int randY = new Random().nextInt(topbot.length);
+            directions[i][0] = leftright[randX];
+            directions[i][1] = topbot[randY];
+        }
 
-        GifImageView gif4 = new GifImageView(this);
-        gif4.setImageResource(R.drawable.koopa);
-        gif4.setLayoutParams(new RelativeLayout.LayoutParams(300,300));
-        RelativeLayout.LayoutParams layoutParams4 =
-                (RelativeLayout.LayoutParams)gif4.getLayoutParams();
-        layoutParams4.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-        layoutParams4.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-        gif4.setLayoutParams(layoutParams4);
-        gif4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.setVisibility(View.GONE);
-            }
-        });
 
-        ecran.addView(gif1);
-        ecran.addView(gif2);
-        ecran.addView(gif3);
-        ecran.addView(gif4);
-
-        Runnable helloRunnable = new Runnable() {
+        Runnable movements = new Runnable() {
             public void run() {
-                gif1.setTop(gif1.getTop()+1);
-                gif1.setBottom(gif1.getBottom()+1);
-                gif1.setLeft(gif1.getLeft()+1);
-                gif1.setRight(gif1.getRight()+1);
-
-                gif2.setTop(gif2.getTop()+1);
-                gif2.setBottom(gif2.getBottom()+1);
-                gif2.setLeft(gif2.getLeft()-1);
-                gif2.setRight(gif2.getRight()-1);
-
-                gif3.setTop(gif3.getTop()-1);
-                gif3.setBottom(gif3.getBottom()-1);
-                gif3.setLeft(gif3.getLeft()-1);
-                gif3.setRight(gif3.getRight()-1);
-
-                gif4.setTop(gif4.getTop()-1);
-                gif4.setBottom(gif4.getBottom()-1);
-                gif4.setLeft(gif4.getLeft()+1);
-                gif4.setRight(gif4.getRight()+1);
+                for (int i=0; i<50; i++) {
+                    if (directions[i][0] == "RIGHT" && directions[i][1] == "BOT") {
+                        if (gifs[i].getX()+1 == displayWidth) {
+                            directions[i][0] = "LEFT";
+                            gifs[i].setX(gifs[i].getX() - 1);
+                            gifs[i].setY(gifs[i].getY() + 1);
+                        }
+                        else if (gifs[i].getY()+1 == displayHeight) {
+                            directions[i][1] = "TOP";
+                            gifs[i].setX(gifs[i].getX() + 1);
+                            gifs[i].setY(gifs[i].getY() - 1);
+                        }
+                        else {
+                            gifs[i].setX(gifs[i].getX() + 1);
+                            gifs[i].setY(gifs[i].getY() + 1);
+                        }
+                    }
+                    if (directions[i][0] == "RIGHT" && directions[i][1] == "TOP") {
+                        if (gifs[i].getX()+1 == displayWidth) {
+                            directions[i][0] = "LEFT";
+                            gifs[i].setX(gifs[i].getX() - 1);
+                            gifs[i].setY(gifs[i].getY() + 1);
+                        }
+                        else if (gifs[i].getY()+1 == 0) {
+                            directions[i][1] = "BOT";
+                            gifs[i].setX(gifs[i].getX() + 1);
+                            gifs[i].setY(gifs[i].getY() + 1);
+                        }
+                        else {
+                            gifs[i].setX(gifs[i].getX() + 1);
+                            gifs[i].setY(gifs[i].getY() - 1);
+                        }
+                    }
+                    if (directions[i][0] == "LEFT" && directions[i][1] == "BOT") {
+                        if (gifs[i].getX()+1 == 0) {
+                            directions[i][0] = "RIGHT";
+                            gifs[i].setX(gifs[i].getX() + 1);
+                            gifs[i].setY(gifs[i].getY() + 1);
+                        }
+                        else if (gifs[i].getY()+1 == displayHeight) {
+                            directions[i][1] = "TOP";
+                            gifs[i].setX(gifs[i].getX() - 1);
+                            gifs[i].setY(gifs[i].getY() - 1);
+                        }
+                        else {
+                            gifs[i].setX(gifs[i].getX() - 1);
+                            gifs[i].setY(gifs[i].getY() + 1);
+                        }
+                    }
+                    if (directions[i][0] == "LEFT" && directions[i][1] == "TOP") {
+                        if (gifs[i].getX()+1 == 0) {
+                            directions[i][0] = "RIGHT";
+                            gifs[i].setX(gifs[i].getX() + 1);
+                            gifs[i].setY(gifs[i].getY() - 1);
+                        }
+                        else if (gifs[i].getY()+1 == 0) {
+                            directions[i][1] = "BOT";
+                            gifs[i].setX(gifs[i].getX() - 1);
+                            gifs[i].setY(gifs[i].getY() + 1);
+                        }
+                        else {
+                            gifs[i].setX(gifs[i].getX() - 1);
+                            gifs[i].setY(gifs[i].getY() - 1);
+                        }
+                    }
+                }
             }
         };
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(helloRunnable, 0, 50, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(movements, 0, 10, TimeUnit.MILLISECONDS);
     }
 
     public void move(View v) {
-        System.out.println("CLICK");
 
         ViewGroup parentView = (ViewGroup) v.getParent();
         parentView.removeView(v);
