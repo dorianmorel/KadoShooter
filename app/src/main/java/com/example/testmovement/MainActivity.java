@@ -43,9 +43,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         else if (nbClick == 2) {
-            ViewGroup parentView = (ViewGroup) v.getParent();
-            parentView.removeView(v);
-            button.setVisibility(View.GONE);
+            ViewGroup parentView = (ViewGroup) button.getParent();
+            parentView.removeView(button);
         }
     }
 }
