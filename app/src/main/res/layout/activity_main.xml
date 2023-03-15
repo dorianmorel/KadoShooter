@@ -12,12 +12,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
+        <ImageView
             android:id="@+id/button"
-            android:layout_width="52dp"
-            android:layout_height="50dp"
+            android:src="@drawable/ennemi"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:onClick="move"
-            android:text="Button"
+            android:text=""
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="17dp"
             tools:layout_editor_absoluteY="1dp" />
