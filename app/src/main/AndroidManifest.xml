@@ -24,7 +24,6 @@
         <activity
             android:name=".StageOne"
             android:exported="true">
-
         </activity>
     </application>
 
