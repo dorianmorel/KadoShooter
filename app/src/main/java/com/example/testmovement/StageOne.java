@@ -43,7 +43,7 @@ public class StageOne extends AppCompatActivity {
 
         RelativeLayout ecran = (RelativeLayout) findViewById(R.id.ecran);
 
-        for (int i=0; i < 25; i++) {
+        for (int i=0; i < 5; i++) {
 
             GifImageView gif = new GifImageView(this);
             gif.setImageResource(R.drawable.koopa);
@@ -51,15 +51,24 @@ public class StageOne extends AppCompatActivity {
 
             gif.setX((int)(Math.random() * (displayWidth-200)));
             gif.setY((int)(Math.random() * (displayHeight-200)));
+            double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
+
 
             gif.setOnClickListener(v -> {
                 Log.i("AAAA", "CLICK");
                 //v.setVisibility(View.GONE);
                 ViewGroup parentView = (ViewGroup) v.getParent();
                 parentView.removeView(v);
+                gifs.remove(gif);
+                directions.remove(direction);
+                Log.i("INFOARR", String.valueOf(gifs.isEmpty()) + " AND " + String.valueOf(gifs.size()));
+                if (gifs.size() == 0) {
+                    ImageView logo = new ImageView(this);
+                    logo.setImageResource(R.drawable.kado_logo);
+                    ecran.addView(logo);
+                }
             });
 
-            double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360° (mais en radians)
             //double direction = degree2Radian(45);
 
             ecran.addView(gif);
@@ -103,7 +112,4 @@ public class StageOne extends AppCompatActivity {
         return degree * Math.PI / 180;
     }
 
-    public void clicEcran(View v){
-        Log.i("AAAA", "CLIC ECRAN");
-    }
 }

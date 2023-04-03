@@ -8,10 +8,9 @@
 
     <RelativeLayout
         android:id="@+id/ecran"
-        android:background="#FF0000"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="clicEcran"
-        android:orientation="vertical"/>
+        android:background="#FF0000"
+        android:orientation="vertical" />
 
 </LinearLayout>
