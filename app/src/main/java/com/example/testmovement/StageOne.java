@@ -103,7 +103,5 @@ public class StageOne extends AppCompatActivity {
         return degree * Math.PI / 180;
     }
 
-    public void clicEcran(View v){
-        Log.i("AAAA", "CLIC ECRAN");
-    }
+
 }
