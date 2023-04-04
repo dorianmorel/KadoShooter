@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, StageOne.class);
         startActivity(intent);
     }
+    public void onClickStage2(View view) {
+        Intent intent = new Intent(this, StageTwo.class);
+        startActivity(intent);
+    }
 
 
 }

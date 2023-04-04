@@ -4,17 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".StageOne">
+    tools:context=".StageTwo">
 
     <RelativeLayout
         android:id="@+id/ecran"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/stage1"
+        android:background="@drawable/stage2"
         android:orientation="vertical">
     </RelativeLayout>
-
-
 
 </LinearLayout>
