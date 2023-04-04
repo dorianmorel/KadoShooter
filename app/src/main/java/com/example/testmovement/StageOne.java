@@ -24,6 +24,7 @@ public class StageOne extends AppCompatActivity {
     private ImageView button;
     private ArrayList<GifImageView> gifs = new ArrayList<>();
     private ArrayList<Double> directions = new ArrayList<>();
+    private ArrayList<Ennemi> ennemies = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,26 +44,25 @@ public class StageOne extends AppCompatActivity {
 
         RelativeLayout ecran = (RelativeLayout) findViewById(R.id.ecran);
 
-        for (int i=0; i < 5; i++) {
+        for (int i=0; i < 20; i++) {
 
             GifImageView gif = new GifImageView(this);
             gif.setImageResource(R.drawable.koopa);
             gif.setLayoutParams(new RelativeLayout.LayoutParams(200,200));
-
+            double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
             gif.setX((int)(Math.random() * (displayWidth-200)));
             gif.setY((int)(Math.random() * (displayHeight-200)));
-            double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
 
+            Ennemi ennemi = new Ennemi(this, gif, direction);
 
-            gif.setOnClickListener(v -> {
-                Log.i("AAAA", "CLICK");
+            ennemi.getGif().setOnClickListener(v -> {
+                //Log.i("AAAA", "CLICK");
                 //v.setVisibility(View.GONE);
                 ViewGroup parentView = (ViewGroup) v.getParent();
                 parentView.removeView(v);
-                gifs.remove(gif);
-                directions.remove(direction);
-                Log.i("INFOARR", String.valueOf(gifs.isEmpty()) + " AND " + String.valueOf(gifs.size()));
-                if (gifs.size() == 0) {
+                ennemies.remove(ennemi);
+                //Log.i("INFOARR", String.valueOf(gifs.isEmpty()) + " AND " + String.valueOf(gifs.size()));
+                if (ennemies.size() == 0) {
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
                     ecran.addView(logo);
@@ -71,19 +71,21 @@ public class StageOne extends AppCompatActivity {
 
             //double direction = degree2Radian(45);
 
-            ecran.addView(gif);
-            gifs.add(gif);
-            directions.add(direction);
+            ecran.addView(ennemi.getGif());
+            ennemies.add(ennemi);
+            //gifs.add(gif);
+            //directions.add(direction);
         }
 
 
+        // A CHANGER
         Runnable movements = new Runnable() {
             public void run() {
 
-                for (int i = 0; i < gifs.size(); i++) {
+                for (int i = 0; i < ennemies.size(); i++) {
 
-                    GifImageView gif = gifs.get(i);
-                    double direction = directions.get(i);
+                    GifImageView gif = ennemies.get(i).getGif();
+                    double direction = ennemies.get(i).getDirection();
 
                     float x = gif.getX();
                     float y = gif.getY();
@@ -93,13 +95,16 @@ public class StageOne extends AppCompatActivity {
                     x += Math.cos(direction) * speed;
                     y += Math.sin(direction) * speed;
 
-                    gif.setX(x);
-                    gif.setY(y);
+                    //gif.setX(x);
+                    //gif.setY(y);
+                    ennemies.get(i).setGif(x,y);
 
                     if (x >= displayWidth-200 || x <= 0)
-                        directions.set(i, degree2Radian(180) - direction);
+                        //directions.set(i, degree2Radian(180) - direction);
+                        ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
                     else if (y >= displayHeight-200 || y <= 0)
-                        directions.set(i, -direction);
+                        //directions.set(i, -direction);
+                        ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
                 }
             }
         };
