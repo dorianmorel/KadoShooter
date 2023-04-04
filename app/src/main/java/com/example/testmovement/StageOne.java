@@ -2,14 +2,17 @@ package com.example.testmovement;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -66,6 +69,15 @@ public class StageOne extends AppCompatActivity {
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
                     ecran.addView(logo);
+                    TextView accueil = new TextView(this);
+                    accueil.setGravity(Gravity.CENTER);
+                    accueil.setText("Retour à l'écran titre");
+                    accueil.setTextSize(40);
+                    ecran.addView(accueil);
+                    accueil.setOnClickListener(w -> {
+                        this.finish();
+                    });
+
                 }
             });
 
@@ -116,5 +128,4 @@ public class StageOne extends AppCompatActivity {
     private double degree2Radian(double degree) {
         return degree * Math.PI / 180;
     }
-
 }
