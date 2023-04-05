@@ -1,4 +1,4 @@
-package com.example.KaDo_Shooter;
+package com.example.kadoshooter;
 
 import org.junit.Test;
 

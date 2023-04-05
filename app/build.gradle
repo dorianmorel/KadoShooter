@@ -6,7 +6,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.testmovement"
+        applicationId "com.example.kadoshooter"
         minSdk 26
         targetSdk 33
         versionCode 1
