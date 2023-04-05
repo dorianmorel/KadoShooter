@@ -2,6 +2,7 @@ package com.example.kadoshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -34,8 +35,10 @@ public class StageOne extends AppCompatActivity {
     private RelativeLayout ecran;
 
     // TIMER
-    private int sec = 5;
+    private int sec = 10;
     private Timer countdown;
+
+    private TextView accueil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class StageOne extends AppCompatActivity {
 
         for (int i=0; i < 20; i++) {
 
+            MediaPlayer koopaDeath = MediaPlayer.create(this, R.raw.koopa_death);
             GifImageView gif = new GifImageView(this);
             gif.setImageResource(R.drawable.koopa);
             gif.setLayoutParams(new RelativeLayout.LayoutParams(200,200));
@@ -73,6 +77,7 @@ public class StageOne extends AppCompatActivity {
                 //Log.i("AAAA", "CLICK");
                 //v.setVisibility(View.GONE);
                 ViewGroup parentView = (ViewGroup) v.getParent();
+                koopaDeath.start();
                 parentView.removeView(v);
                 ennemies.remove(ennemi);
                 //Log.i("INFOARR", String.valueOf(gifs.isEmpty()) + " AND " + String.valueOf(gifs.size()));
@@ -80,8 +85,7 @@ public class StageOne extends AppCompatActivity {
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
                     ecran.addView(logo);
-                    TextView accueil = new TextView(this);
-                    accueil.setGravity(Gravity.CENTER);
+                    accueil = findViewById(R.id.accueil2);
                     accueil.setText("Retour à l'écran titre");
                     accueil.setTextSize(40);
                     ecran.addView(accueil);

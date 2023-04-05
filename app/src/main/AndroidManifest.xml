@@ -14,10 +14,13 @@
         android:theme="@style/Theme.kadoshooter"
         tools:targetApi="31">
         <activity
-            android:name="com.example.kadoshooter.StageTwo"
+            android:name=".StageThree"
             android:exported="false" />
         <activity
-            android:name="com.example.kadoshooter.MainActivity"
+            android:name=".StageTwo"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,8 +29,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.kadoshooter.StageOne"
-            android:exported="true"></activity>
+            android:name=".StageOne"
+            android:exported="true" />
     </application>
 
 </manifest>

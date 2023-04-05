@@ -43,4 +43,18 @@
         android:onClick="onClickStage2"
         />
 
+    <TextView
+        android:id="@+id/stage3"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:background="#FF0000"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="BOSS FIGHT"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:onClick="onClickStage3"
+        />
+
 </LinearLayout>
