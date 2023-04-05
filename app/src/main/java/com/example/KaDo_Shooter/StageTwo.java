@@ -1,13 +1,10 @@
-package com.example.testmovement;
+package com.example.KaDo_Shooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
@@ -21,13 +18,15 @@ import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
 
-public class StageOne extends AppCompatActivity {
+public class StageTwo extends AppCompatActivity {
 
     private int nbClick = 0;
     private ImageView button;
     private ArrayList<GifImageView> gifs = new ArrayList<>();
     private ArrayList<Double> directions = new ArrayList<>();
     private ArrayList<Ennemi> ennemies = new ArrayList<>();
+    private int displayWidth;
+    private int displayHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class StageOne extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        setContentView(R.layout.activity_stage_one);
+        setContentView(R.layout.activity_stage_two);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -47,24 +46,37 @@ public class StageOne extends AppCompatActivity {
 
         RelativeLayout ecran = (RelativeLayout) findViewById(R.id.ecran);
 
-        for (int i=0; i < 20; i++) {
+        for (int i=0; i < 15; i++) {
+
 
             GifImageView gif = new GifImageView(this);
-            gif.setImageResource(R.drawable.koopa);
-            gif.setLayoutParams(new RelativeLayout.LayoutParams(200,200));
+            gif.setImageResource(R.drawable.goomba);
+            gif.setLayoutParams(new RelativeLayout.LayoutParams(300,300));
             double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
-            gif.setX((int)(Math.random() * (displayWidth-200)));
-            gif.setY((int)(Math.random() * (displayHeight-200)));
+            int x = (int)(Math.random() * (displayWidth-300));
+            int y = (int)(Math.random() * (displayHeight-300));
 
-            Ennemi ennemi = new Ennemi(this, gif, direction);
+            Ennemi ennemi = createEnnemi(300, 300, x, y);
 
             ennemi.getGif().setOnClickListener(v -> {
-                //Log.i("AAAA", "CLICK");
-                //v.setVisibility(View.GONE);
                 ViewGroup parentView = (ViewGroup) v.getParent();
                 parentView.removeView(v);
                 ennemies.remove(ennemi);
-                //Log.i("INFOARR", String.valueOf(gifs.isEmpty()) + " AND " + String.valueOf(gifs.size()));
+                Ennemi ennemi1 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY());
+                ecran.addView(ennemi1.getGif());
+                ennemies.add(ennemi1);
+                Ennemi ennemi2 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY());
+                ecran.addView(ennemi2.getGif());
+                ennemies.add(ennemi2);
+                ennemi1.getGif().setOnClickListener(z -> {
+                    ecran.removeView(z);
+                    ennemies.remove(ennemi1);
+                        });
+                ennemi2.getGif().setOnClickListener(r -> {
+                    ecran.removeView(r);
+                    ennemies.remove(ennemi2);
+                });
+
                 if (ennemies.size() == 0) {
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
@@ -77,7 +89,6 @@ public class StageOne extends AppCompatActivity {
                     accueil.setOnClickListener(w -> {
                         this.finish();
                     });
-
                 }
             });
 
@@ -111,10 +122,10 @@ public class StageOne extends AppCompatActivity {
                     //gif.setY(y);
                     ennemies.get(i).setGif(x,y);
 
-                    if (x >= displayWidth-200 || x <= 0)
+                    if (x >= displayWidth-ennemies.get(i).getGif().getWidth() || x <= 0)
                         //directions.set(i, degree2Radian(180) - direction);
                         ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                    else if (y >= displayHeight-200 || y <= 0)
+                    else if (y >= displayHeight-ennemies.get(i).getGif().getHeight() || y <= 0)
                         //directions.set(i, -direction);
                         ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
                 }
@@ -127,5 +138,15 @@ public class StageOne extends AppCompatActivity {
 
     private double degree2Radian(double degree) {
         return degree * Math.PI / 180;
+    }
+    private Ennemi createEnnemi(int width, int height, float x, float y) {
+        GifImageView gif = new GifImageView(this);
+        gif.setImageResource(R.drawable.goomba);
+        gif.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+        double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
+        gif.setX(x);
+        gif.setY(y);
+        Ennemi ennemi = new Ennemi(this, gif, direction);
+        return ennemi;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.testmovement;
+package com.example.KaDo_Shooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 

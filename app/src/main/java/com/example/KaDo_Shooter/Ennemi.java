@@ -1,7 +1,6 @@
-package com.example.testmovement;
+package com.example.KaDo_Shooter;
 
 import android.content.Context;
-import android.widget.RelativeLayout;
 
 import pl.droidsonroids.gif.GifImageView;
 
