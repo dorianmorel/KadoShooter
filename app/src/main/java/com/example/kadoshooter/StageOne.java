@@ -192,10 +192,10 @@ public class StageOne extends AppCompatActivity {
             //gif.setY(y);
             ennemies.get(i).setGif(x,y);
 
-            if (x >= displayWidth-200 || x <= 0)
+            if (x > displayWidth-200 || x < 0)
                 //directions.set(i, degree2Radian(180) - direction);
                 ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-            else if (y >= displayHeight-200 || y <= 0)
+            else if (y > displayHeight-200 || y < 0)
                 //directions.set(i, -direction);
                 ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
         }

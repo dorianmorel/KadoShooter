@@ -44,6 +44,8 @@ public class StageThree extends AppCompatActivity {
 
     private MediaPlayer theme3;
 
+    private Float speed = (float) 5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -102,10 +104,13 @@ public class StageThree extends AppCompatActivity {
                 executorHit.scheduleAtFixedRate(hit, 0, 100, TimeUnit.MILLISECONDS);
 
                 nbClick++;
-                if(nbClick==20){
+                if(nbClick==100){
                     ViewGroup parentView = (ViewGroup) v.getParent();
                     parentView.removeView(v);
                     ennemies.remove(ennemi);
+                }
+                if(nbClick%5==0){
+                    speed += (float) 5;
                 }
 
                 if (ennemies.size() == 0) {
@@ -175,8 +180,6 @@ public class StageThree extends AppCompatActivity {
                 float x = gif.getX();
                 float y = gif.getY();
 
-                float speed = 10;
-
                 x += Math.cos(direction) * speed;
                 y += Math.sin(direction) * speed;
 
@@ -184,10 +187,10 @@ public class StageThree extends AppCompatActivity {
                 //gif.setY(y);
                 ennemies.get(i).setGif(x,y);
 
-            if (x >= displayWidth-ennemies.get(i).getGif().getWidth() || x <= 0)
+            if (x > displayWidth-ennemies.get(i).getGif().getWidth() || x < 0)
                 //directions.set(i, degree2Radian(180) - direction);
                 ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-            else if (y >= displayHeight-ennemies.get(i).getGif().getHeight() || y <= 0)
+            else if (y > displayHeight-ennemies.get(i).getGif().getHeight() || y < 0)
                 //directions.set(i, -direction);
                 ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
         }
