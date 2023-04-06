@@ -63,6 +63,9 @@ public class StageOne extends AppCompatActivity {
 
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
+        MediaPlayer theme1 = MediaPlayer.create(this, R.raw.theme1);
+        theme1.start();
+
         for (int i=0; i < 20; i++) {
 
             MediaPlayer koopaDeath = MediaPlayer.create(this, R.raw.koopa_death);
@@ -209,4 +212,5 @@ public class StageOne extends AppCompatActivity {
             this.finish();
         });
     }
+
 }
