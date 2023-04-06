@@ -82,13 +82,17 @@ public class StageOne extends AppCompatActivity {
                 ennemies.remove(ennemi);
                 //Log.i("INFOARR", String.valueOf(gifs.isEmpty()) + " AND " + String.valueOf(gifs.size()));
                 if (ennemies.size() == 0) {
+                    countdown.cancel();
+                    timer.setText("");
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
                     ecran.addView(logo);
-                    accueil = findViewById(R.id.accueil2);
+                    accueil = findViewById(R.id.accueil);
                     accueil.setText("Retour à l'écran titre");
                     accueil.setTextSize(40);
+
                     ecran.addView(accueil);
+
                     accueil.setOnClickListener(w -> {
                         this.finish();
                     });

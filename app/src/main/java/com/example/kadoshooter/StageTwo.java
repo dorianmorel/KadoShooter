@@ -2,6 +2,7 @@ package com.example.kadoshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -35,6 +36,7 @@ public class StageTwo extends AppCompatActivity {
 
     private TextView timer;
     private RelativeLayout ecran;
+    private TextView accueil;
 
     // TIMER
     private int sec = 20;
@@ -62,7 +64,7 @@ public class StageTwo extends AppCompatActivity {
 
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
-        for (int i=0; i < 15; i++) {
+        for (int i=0; i < 5; i++) {
             MediaPlayer goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
 
             GifImageView gif = new GifImageView(this);
@@ -89,22 +91,25 @@ public class StageTwo extends AppCompatActivity {
                     goombaDeath.start();
                     ecran.removeView(z);
                     ennemies.remove(ennemi1);
+                    if (ennemies.size() == 0)
+                        endGame();
                         });
                 ennemi2.getGif().setOnClickListener(r -> {
                     goombaDeath.start();
                     ecran.removeView(r);
                     ennemies.remove(ennemi2);
+                    if (ennemies.size() == 0)
+                        endGame();
                 });
 
                 if (ennemies.size() == 0) {
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
                     ecran.addView(logo);
-                    TextView accueil = new TextView(this);
+                    accueil = findViewById(R.id.accueil2);
                     accueil.setGravity(Gravity.CENTER);
                     accueil.setText("Retour à l'écran titre");
                     accueil.setTextSize(40);
-                    ecran.addView(accueil);
                     accueil.setOnClickListener(w -> {
                         this.finish();
                     });
@@ -192,7 +197,6 @@ public class StageTwo extends AppCompatActivity {
     private final int seti() {
         //if interval is 1, cancel
         if (sec == 1) {
-            countdown.cancel();
 
             this.runOnUiThread(new Runnable() {
                 @Override
@@ -209,10 +213,13 @@ public class StageTwo extends AppCompatActivity {
 
     private void endGame() {
         Log.i("ENDGAME","TEST");
-        for (Ennemi ennemi : ennemies) {
-            Log.i("ENDGAME","OUI");
-            ecran.removeView(ennemi.getGif());
+        if (ennemies.size() != 0) {
+            for (Ennemi ennemi : ennemies) {
+                Log.i("ENDGAME", "OUI");
+                ecran.removeView(ennemi.getGif());
+            }
         }
+        countdown.cancel();
         timer.setText("");
         ImageView logo = new ImageView(this);
         logo.setImageResource(R.drawable.kado_logo);

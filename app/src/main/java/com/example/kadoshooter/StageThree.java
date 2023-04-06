@@ -2,6 +2,7 @@ package com.example.kadoshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -43,8 +44,8 @@ public class StageThree extends AppCompatActivity {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int displayWidth = displayMetrics.widthPixels;
-        int displayHeight = displayMetrics.heightPixels;
+        displayWidth = displayMetrics.widthPixels;
+        displayHeight = displayMetrics.heightPixels;
 
         RelativeLayout ecran = (RelativeLayout) findViewById(R.id.ecran);
 
@@ -63,7 +64,7 @@ public class StageThree extends AppCompatActivity {
             ennemi.getGif().setOnClickListener(v -> {
 
                 nbClick++;
-
+                //ennemi.getGif().getDrawable().setColorFilter(0x76ffffff, PorterDuff.Mode.MULTIPLY );
                 if(nbClick==5){
                     ViewGroup parentView = (ViewGroup) v.getParent();
                     parentView.removeView(v);
