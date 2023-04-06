@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -33,9 +34,10 @@ public class StageOne extends AppCompatActivity {
 
     private TextView timer;
     private RelativeLayout ecran;
-
+    private int displayWidth;
+    private int displayHeight;
     // TIMER
-    private int sec = 10;
+    private int sec = 11;
     private Timer countdown;
 
     private TextView accueil;
@@ -56,10 +58,13 @@ public class StageOne extends AppCompatActivity {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int displayWidth = displayMetrics.widthPixels;
-        int displayHeight = displayMetrics.heightPixels;
+        displayWidth = displayMetrics.widthPixels;
+        displayHeight = displayMetrics.heightPixels;
 
         ecran = (RelativeLayout) findViewById(R.id.ecran);
+
+        MediaPlayer theme1 = MediaPlayer.create(this, R.raw.theme1);
+        theme1.start();
 
         for (int i=0; i < 20; i++) {
 
@@ -90,9 +95,6 @@ public class StageOne extends AppCompatActivity {
                     accueil = findViewById(R.id.accueil);
                     accueil.setText("Retour à l'écran titre");
                     accueil.setTextSize(40);
-
-                    ecran.addView(accueil);
-
                     accueil.setOnClickListener(w -> {
                         this.finish();
                     });
@@ -113,30 +115,13 @@ public class StageOne extends AppCompatActivity {
         Runnable movements = new Runnable() {
             public void run() {
 
-                for (int i = 0; i < ennemies.size(); i++) {
-
-                    GifImageView gif = ennemies.get(i).getGif();
-                    double direction = ennemies.get(i).getDirection();
-
-                    float x = gif.getX();
-                    float y = gif.getY();
-
-                    float speed = 10;
-
-                    x += Math.cos(direction) * speed;
-                    y += Math.sin(direction) * speed;
-
-                    //gif.setX(x);
-                    //gif.setY(y);
-                    ennemies.get(i).setGif(x,y);
-
-                    if (x >= displayWidth-200 || x <= 0)
-                        //directions.set(i, degree2Radian(180) - direction);
-                        ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                    else if (y >= displayHeight-200 || y <= 0)
-                        //directions.set(i, -direction);
-                        ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
+                try {
+                    updateMovements();
                 }
+                catch (ConcurrentModificationException exception) {
+                    // erreur si l'exec prend plus de 20ms
+                }
+
             }
         };
 
@@ -184,7 +169,32 @@ public class StageOne extends AppCompatActivity {
         return --sec;
     }
 
+    private void updateMovements(){
+        for (int i = 0; i < ennemies.size(); i++) {
 
+            GifImageView gif = ennemies.get(i).getGif();
+            double direction = ennemies.get(i).getDirection();
+
+            float x = gif.getX();
+            float y = gif.getY();
+
+            float speed = 10;
+
+            x += Math.cos(direction) * speed;
+            y += Math.sin(direction) * speed;
+
+            //gif.setX(x);
+            //gif.setY(y);
+            ennemies.get(i).setGif(x,y);
+
+            if (x >= displayWidth-200 || x <= 0)
+                //directions.set(i, degree2Radian(180) - direction);
+                ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
+            else if (y >= displayHeight-200 || y <= 0)
+                //directions.set(i, -direction);
+                ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
+        }
+    }
     private void endGame() {
         Log.i("ENDGAME","TEST");
         for (Ennemi ennemi : ennemies) {
@@ -202,4 +212,5 @@ public class StageOne extends AppCompatActivity {
             this.finish();
         });
     }
+
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -39,7 +40,7 @@ public class StageTwo extends AppCompatActivity {
     private TextView accueil;
 
     // TIMER
-    private int sec = 20;
+    private int sec = 21;
     private Timer countdown;
 
 
@@ -59,8 +60,8 @@ public class StageTwo extends AppCompatActivity {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int displayWidth = displayMetrics.widthPixels;
-        int displayHeight = displayMetrics.heightPixels;
+        displayWidth = displayMetrics.widthPixels;
+        displayHeight = displayMetrics.heightPixels;
 
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
@@ -129,30 +130,13 @@ public class StageTwo extends AppCompatActivity {
         Runnable movements = new Runnable() {
             public void run() {
 
-                for (int i = 0; i < ennemies.size(); i++) {
-
-                    GifImageView gif = ennemies.get(i).getGif();
-                    double direction = ennemies.get(i).getDirection();
-
-                    float x = gif.getX();
-                    float y = gif.getY();
-
-                    float speed = 10;
-
-                    x += Math.cos(direction) * speed;
-                    y += Math.sin(direction) * speed;
-
-                    //gif.setX(x);
-                    //gif.setY(y);
-                    ennemies.get(i).setGif(x,y);
-
-                    if (x >= displayWidth-ennemies.get(i).getGif().getWidth() || x <= 0)
-                        //directions.set(i, degree2Radian(180) - direction);
-                        ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                    else if (y >= displayHeight-ennemies.get(i).getGif().getHeight() || y <= 0)
-                        //directions.set(i, -direction);
-                        ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
+                try {
+                    updateMovements();
                 }
+                catch (ConcurrentModificationException exception) {
+                    // erreur si l'exec prend plus de 20ms
+                }
+
             }
         };
 
@@ -210,7 +194,32 @@ public class StageTwo extends AppCompatActivity {
         return --sec;
     }
 
+    private void updateMovements(){
+        for (int i = 0; i < ennemies.size(); i++) {
 
+            GifImageView gif = ennemies.get(i).getGif();
+            double direction = ennemies.get(i).getDirection();
+
+            float x = gif.getX();
+            float y = gif.getY();
+
+            float speed = 10;
+
+            x += Math.cos(direction) * speed;
+            y += Math.sin(direction) * speed;
+
+            //gif.setX(x);
+            //gif.setY(y);
+            ennemies.get(i).setGif(x,y);
+
+            if (x >= displayWidth-200 || x <= 0)
+                //directions.set(i, degree2Radian(180) - direction);
+                ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
+            else if (y >= displayHeight-200 || y <= 0)
+                //directions.set(i, -direction);
+                ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
+        }
+    }
     private void endGame() {
         Log.i("ENDGAME","TEST");
         if (ennemies.size() != 0) {

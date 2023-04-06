@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.kadoshooter.Ennemi;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -99,30 +100,13 @@ public class StageThree extends AppCompatActivity {
         Runnable movements = new Runnable() {
             public void run() {
 
-                for (int i = 0; i < ennemies.size(); i++) {
-
-                    GifImageView gif = ennemies.get(i).getGif();
-                    double direction = ennemies.get(i).getDirection();
-
-                    float x = gif.getX();
-                    float y = gif.getY();
-
-                    float speed = 10;
-
-                    x += Math.cos(direction) * speed;
-                    y += Math.sin(direction) * speed;
-
-                    //gif.setX(x);
-                    //gif.setY(y);
-                    ennemies.get(i).setGif(x,y);
-
-                    if (x >= displayWidth-ennemies.get(i).getGif().getWidth() || x <= 0)
-                        //directions.set(i, degree2Radian(180) - direction);
-                        ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                    else if (y >= displayHeight-ennemies.get(i).getGif().getHeight() || y <= 0)
-                        //directions.set(i, -direction);
-                        ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
+                try {
+                    updateMovements();
                 }
+                catch (ConcurrentModificationException exception) {
+                    // erreur si l'exec prend plus de 20ms
+                }
+
             }
         };
 
@@ -143,4 +127,31 @@ public class StageThree extends AppCompatActivity {
         Ennemi ennemi = new Ennemi(this, gif, direction);
         return ennemi;
     }
+
+        private void updateMovements(){
+            for (int i = 0; i < ennemies.size(); i++) {
+
+                GifImageView gif = ennemies.get(i).getGif();
+                double direction = ennemies.get(i).getDirection();
+
+                float x = gif.getX();
+                float y = gif.getY();
+
+                float speed = 10;
+
+                x += Math.cos(direction) * speed;
+                y += Math.sin(direction) * speed;
+
+                //gif.setX(x);
+                //gif.setY(y);
+                ennemies.get(i).setGif(x,y);
+
+                if (x >= displayWidth-ennemies.get(i).getGif().getWidth() || x <= 0)
+                    //directions.set(i, degree2Radian(180) - direction);
+                    ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
+                else if (y >= displayHeight-ennemies.get(i).getGif().getHeight() || y <= 0)
+                    //directions.set(i, -direction);
+                    ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
+            }
+        }
 }
