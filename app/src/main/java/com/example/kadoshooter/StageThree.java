@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class StageThree extends AppCompatActivity {
     private Runnable hit;
     private ScheduledExecutorService executorHit;
 
+    private MediaPlayer theme3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,9 @@ public class StageThree extends AppCompatActivity {
         displayHeight = displayMetrics.heightPixels;
 
         RelativeLayout ecran = (RelativeLayout) findViewById(R.id.ecran);
+
+        theme3 = MediaPlayer.create(this, R.raw.theme3);
+        theme3.start();
 
         for (int i=0; i < 1; i++) {
 
@@ -190,5 +195,11 @@ public class StageThree extends AppCompatActivity {
 
     private void cancelExecutor() {
         executorHit.shutdown();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();  // Always call the superclass method first
+        theme3.stop();
     }
 }

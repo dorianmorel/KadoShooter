@@ -44,6 +44,8 @@ public class StageTwo extends AppCompatActivity {
     private int sec = 21;
     private Timer countdown;
 
+    private MediaPlayer theme2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,9 @@ public class StageTwo extends AppCompatActivity {
         displayHeight = displayMetrics.heightPixels;
 
         ecran = (RelativeLayout) findViewById(R.id.ecran);
+
+        theme2 = MediaPlayer.create(this, R.raw.theme2);
+        theme2.start();
 
         for (int i=0; i < 15; i++) {
             MediaPlayer goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
@@ -244,5 +249,11 @@ public class StageTwo extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();  // Always call the superclass method first
+        theme2.stop();
     }
 }
