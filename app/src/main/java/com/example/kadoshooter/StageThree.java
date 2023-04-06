@@ -1,10 +1,12 @@
 package com.example.kadoshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -31,6 +33,13 @@ public class StageThree extends AppCompatActivity {
     private ArrayList<Ennemi> ennemies = new ArrayList<>();
     private int displayWidth;
     private int displayHeight;
+
+
+    private Integer if1noFilter;
+
+    private Runnable hit;
+    private ScheduledExecutorService executorHit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +72,30 @@ public class StageThree extends AppCompatActivity {
             Ennemi ennemi = createEnnemi(700, 700, x, y);
 
             ennemi.getGif().setOnClickListener(v -> {
+                //ennemi.getGif().setColorFilter(ContextCompat.getColor(this,R.color.orange));
+                if1noFilter = 0;
+                hit = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (if1noFilter == 0) {
+                            ennemi.getGif().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                        }
+                        else if (if1noFilter == 1) {
+                            Log.i("RUNHIT","YES");
+                            clearBowserFilter();
+                            cancelExecutor();
+                        }
+                        if1noFilter++;
+                    }
+
+                    public void clearBowserFilter() {
+                        ennemi.getGif().clearColorFilter();
+                    }
+                };
+                executorHit = Executors.newScheduledThreadPool(1);
+                executorHit.scheduleAtFixedRate(hit, 0, 100, TimeUnit.MILLISECONDS);
 
                 nbClick++;
-                //ennemi.getGif().getDrawable().setColorFilter(0x76ffffff, PorterDuff.Mode.MULTIPLY );
                 if(nbClick==5){
                     ViewGroup parentView = (ViewGroup) v.getParent();
                     parentView.removeView(v);
@@ -128,30 +158,34 @@ public class StageThree extends AppCompatActivity {
         return ennemi;
     }
 
-        private void updateMovements(){
-            for (int i = 0; i < ennemies.size(); i++) {
+    private void updateMovements(){
+        for (int i = 0; i < ennemies.size(); i++) {
 
-                GifImageView gif = ennemies.get(i).getGif();
-                double direction = ennemies.get(i).getDirection();
+            GifImageView gif = ennemies.get(i).getGif();
+            double direction = ennemies.get(i).getDirection();
 
-                float x = gif.getX();
-                float y = gif.getY();
+            float x = gif.getX();
+            float y = gif.getY();
 
-                float speed = 10;
+            float speed = 10;
 
-                x += Math.cos(direction) * speed;
-                y += Math.sin(direction) * speed;
+            x += Math.cos(direction) * speed;
+            y += Math.sin(direction) * speed;
 
-                //gif.setX(x);
-                //gif.setY(y);
-                ennemies.get(i).setGif(x,y);
+            //gif.setX(x);
+            //gif.setY(y);
+            ennemies.get(i).setGif(x,y);
 
-                if (x >= displayWidth-ennemies.get(i).getGif().getWidth() || x <= 0)
-                    //directions.set(i, degree2Radian(180) - direction);
-                    ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                else if (y >= displayHeight-ennemies.get(i).getGif().getHeight() || y <= 0)
-                    //directions.set(i, -direction);
-                    ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
-            }
+            if (x >= displayWidth-ennemies.get(i).getGif().getWidth() || x <= 0)
+                //directions.set(i, degree2Radian(180) - direction);
+                ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
+            else if (y >= displayHeight-ennemies.get(i).getGif().getHeight() || y <= 0)
+                //directions.set(i, -direction);
+                ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
         }
+    }
+
+    private void cancelExecutor() {
+        executorHit.shutdown();
+    }
 }
