@@ -3,6 +3,7 @@ package com.example.kadoshooter;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -96,7 +97,7 @@ public class StageThree extends AppCompatActivity {
                 executorHit.scheduleAtFixedRate(hit, 0, 100, TimeUnit.MILLISECONDS);
 
                 nbClick++;
-                if(nbClick==5){
+                if(nbClick==20){
                     ViewGroup parentView = (ViewGroup) v.getParent();
                     parentView.removeView(v);
                     ennemies.remove(ennemi);
@@ -113,6 +114,8 @@ public class StageThree extends AppCompatActivity {
                     ecran.addView(accueil);
                     accueil.setOnClickListener(w -> {
                         this.finish();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
                     });
                 }
             });
@@ -158,23 +161,23 @@ public class StageThree extends AppCompatActivity {
         return ennemi;
     }
 
-    private void updateMovements(){
-        for (int i = 0; i < ennemies.size(); i++) {
+        private void updateMovements(){
+            for (int i = 0; i < ennemies.size(); i++) {
 
-            GifImageView gif = ennemies.get(i).getGif();
-            double direction = ennemies.get(i).getDirection();
+                GifImageView gif = ennemies.get(i).getGif();
+                double direction = ennemies.get(i).getDirection();
 
-            float x = gif.getX();
-            float y = gif.getY();
+                float x = gif.getX();
+                float y = gif.getY();
 
-            float speed = 10;
+                float speed = 10;
 
-            x += Math.cos(direction) * speed;
-            y += Math.sin(direction) * speed;
+                x += Math.cos(direction) * speed;
+                y += Math.sin(direction) * speed;
 
-            //gif.setX(x);
-            //gif.setY(y);
-            ennemies.get(i).setGif(x,y);
+                //gif.setX(x);
+                //gif.setY(y);
+                ennemies.get(i).setGif(x,y);
 
             if (x >= displayWidth-ennemies.get(i).getGif().getWidth() || x <= 0)
                 //directions.set(i, degree2Radian(180) - direction);

@@ -2,6 +2,7 @@ package com.example.kadoshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -65,7 +66,7 @@ public class StageTwo extends AppCompatActivity {
 
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
-        for (int i=0; i < 5; i++) {
+        for (int i=0; i < 15; i++) {
             MediaPlayer goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
 
             GifImageView gif = new GifImageView(this);
@@ -113,6 +114,8 @@ public class StageTwo extends AppCompatActivity {
                     accueil.setTextSize(40);
                     accueil.setOnClickListener(w -> {
                         this.finish();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
                     });
                 }
             });
@@ -238,6 +241,8 @@ public class StageTwo extends AppCompatActivity {
         accueil.setTextSize(40);
         accueil.setOnClickListener(w -> {
             this.finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         });
     }
 }

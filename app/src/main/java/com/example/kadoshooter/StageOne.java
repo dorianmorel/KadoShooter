@@ -2,6 +2,7 @@ package com.example.kadoshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -41,6 +42,8 @@ public class StageOne extends AppCompatActivity {
     private Timer countdown;
 
     private TextView accueil;
+    private MediaPlayer theme1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class StageOne extends AppCompatActivity {
 
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
-        MediaPlayer theme1 = MediaPlayer.create(this, R.raw.theme1);
+        theme1 = MediaPlayer.create(this, R.raw.theme1);
         theme1.start();
 
         for (int i=0; i < 20; i++) {
@@ -97,6 +100,8 @@ public class StageOne extends AppCompatActivity {
                     accueil.setTextSize(40);
                     accueil.setOnClickListener(w -> {
                         this.finish();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
                     });
 
                 }
@@ -210,7 +215,15 @@ public class StageOne extends AppCompatActivity {
         accueil.setTextSize(40);
         accueil.setOnClickListener(w -> {
             this.finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();  // Always call the superclass method first
+        theme1.stop();
     }
 
 }

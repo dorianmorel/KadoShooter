@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/main_background"
+    >
 
     <ImageView
         android:id="@+id/logo"
@@ -16,6 +18,17 @@
         />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onClickStage1"
+        android:text="Tap the ennemies as fast as you can !"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold|italic" />
+
+    <TextView
         android:id="@+id/stage1"
         android:layout_width="200dp"
         android:layout_height="50dp"
@@ -23,11 +36,11 @@
         android:layout_margin="10dp"
         android:background="@color/orange"
         android:gravity="center_horizontal|center_vertical"
+        android:onClick="onClickStage1"
         android:text="STAGE 1"
         android:textColor="#FFFFFF"
         android:textSize="20dp"
-        android:onClick="onClickStage1"
-        />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/stage2"
@@ -37,11 +50,11 @@
         android:layout_margin="10dp"
         android:background="@color/orange"
         android:gravity="center_horizontal|center_vertical"
+        android:onClick="onClickStage2"
         android:text="STAGE 2"
         android:textColor="#FFFFFF"
         android:textSize="20dp"
-        android:onClick="onClickStage2"
-        />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/stage3"
@@ -51,10 +64,10 @@
         android:layout_margin="10dp"
         android:background="#FF0000"
         android:gravity="center_horizontal|center_vertical"
+        android:onClick="onClickStage3"
         android:text="BOSS FIGHT"
         android:textColor="#FFFFFF"
         android:textSize="20dp"
-        android:onClick="onClickStage3"
-        />
+        android:textStyle="bold" />
 
 </LinearLayout>
