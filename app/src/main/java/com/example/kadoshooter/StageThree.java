@@ -160,6 +160,7 @@ public class StageThree extends AppCompatActivity {
     private double degree2Radian(double degree) {
         return degree * Math.PI / 180;
     }
+
     private Ennemi createEnnemi(int width, int height, float x, float y) {
         GifImageView gif = new GifImageView(this);
         gif.setImageResource(R.drawable.bowser);
