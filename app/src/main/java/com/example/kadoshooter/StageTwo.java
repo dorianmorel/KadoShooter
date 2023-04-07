@@ -13,7 +13,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import static com.example.kadoshooter.AbstractStage.*;
+
 
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class StageTwo extends AppCompatActivity {
+public class StageTwo extends AbstractStage {
 
     private int nbClick = 0;
     private ArrayList<Ennemi> ennemies = new ArrayList<>();

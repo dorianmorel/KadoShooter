@@ -12,7 +12,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import static com.example.kadoshooter.AbstractStage.*;
 
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
 
-public class StageOne extends AppCompatActivity {
+public class StageOne extends AbstractStage {
 
     private int nbClick = 0;
     private ImageView button;

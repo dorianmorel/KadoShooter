@@ -13,7 +13,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import static com.example.kadoshooter.AbstractStage.*;
 
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
 
-public class StageThree extends AppCompatActivity {
+public class StageThree extends AbstractStage {
 
     private int nbClick = 0;
     private ImageView button;
@@ -92,7 +91,7 @@ public class StageThree extends AppCompatActivity {
             int x = (int)(Math.random() * (displayWidth-700));
             int y = (int)(Math.random() * (displayHeight-700));
 
-            bowser = AbstractStage.createEnnemi(700, 700, x, y, R.drawable.bowser, bowserSpeed, this);
+            bowser = createEnnemi(700, 700, x, y, R.drawable.bowser, bowserSpeed, this);
 
             bowser.getGif().setOnClickListener(v -> {
                 if1noFilter = 0;
@@ -161,7 +160,7 @@ public class StageThree extends AppCompatActivity {
                     }
 
 
-                    AbstractStage.updateMovements(ennemies, displayWidth, displayHeight);
+                    updateMovements(ennemies, displayWidth, displayHeight);
                 }
                 catch (ConcurrentModificationException exception) {
                     // erreur si l'exec prend plus de 20ms

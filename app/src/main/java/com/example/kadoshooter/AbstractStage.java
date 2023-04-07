@@ -7,13 +7,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import pl.droidsonroids.gif.GifImageView;
 
-public abstract class AbstractStage {
+public abstract class AbstractStage extends AppCompatActivity {
 
     public static Ennemi createEnnemi(int width, int height, float x, float y, int file, float spd, Context context) {
         GifImageView gif = new GifImageView(context);
