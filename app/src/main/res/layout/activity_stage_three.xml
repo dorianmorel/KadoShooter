@@ -12,6 +12,22 @@
         android:layout_height="match_parent"
         android:background="@drawable/stage3"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/accueil3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/mario"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="#FFFFFF"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/timer3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/mario"
+            android:gravity="center_horizontal|center_vertical" />
     </RelativeLayout>
 
 </LinearLayout>

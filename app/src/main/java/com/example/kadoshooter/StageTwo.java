@@ -3,7 +3,6 @@ package com.example.kadoshooter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -14,6 +13,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import static com.example.kadoshooter.AbstractStage.*;
 
 
 import java.util.ArrayList;
@@ -24,14 +24,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import pl.droidsonroids.gif.GifImageView;
-
 public class StageTwo extends AppCompatActivity {
 
     private int nbClick = 0;
-    private ImageView button;
-    private ArrayList<GifImageView> gifs = new ArrayList<>();
-    private ArrayList<Double> directions = new ArrayList<>();
     private ArrayList<Ennemi> ennemies = new ArrayList<>();
     private int displayWidth;
     private int displayHeight;
@@ -73,25 +68,20 @@ public class StageTwo extends AppCompatActivity {
 
         for (int i=0; i < 15; i++) {
             MediaPlayer goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
-
-            GifImageView gif = new GifImageView(this);
-            gif.setImageResource(R.drawable.goomba);
-            gif.setLayoutParams(new RelativeLayout.LayoutParams(300,300));
-            double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
             int x = (int)(Math.random() * (displayWidth-300));
             int y = (int)(Math.random() * (displayHeight-300));
 
-            Ennemi ennemi = createEnnemi(300, 300, x, y);
+            Ennemi ennemi = createEnnemi(300, 300, x, y, R.drawable.goomba, 5, this);
 
             ennemi.getGif().setOnClickListener(v -> {
                 ViewGroup parentView = (ViewGroup) v.getParent();
                 parentView.removeView(v);
                 goombaDeath.start();
                 ennemies.remove(ennemi);
-                Ennemi ennemi1 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY());
+                Ennemi ennemi1 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY(), R.drawable.goomba, 5, this);
                 ecran.addView(ennemi1.getGif());
                 ennemies.add(ennemi1);
-                Ennemi ennemi2 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY());
+                Ennemi ennemi2 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY(), R.drawable.goomba, 5, this);
                 ecran.addView(ennemi2.getGif());
                 ennemies.add(ennemi2);
                 ennemi1.getGif().setOnClickListener(z -> {
@@ -115,7 +105,7 @@ public class StageTwo extends AppCompatActivity {
                     ecran.addView(logo);
                     accueil = findViewById(R.id.accueil2);
                     accueil.setGravity(Gravity.CENTER);
-                    accueil.setText("Retour à l'écran titre");
+                    accueil.setText("Retour a l'ecran titre");
                     accueil.setTextSize(40);
                     accueil.setOnClickListener(w -> {
                         this.finish();
@@ -125,12 +115,8 @@ public class StageTwo extends AppCompatActivity {
                 }
             });
 
-            //double direction = degree2Radian(45);
-
             ecran.addView(ennemi.getGif());
             ennemies.add(ennemi);
-            //gifs.add(gif);
-            //directions.add(direction);
         }
 
 
@@ -139,7 +125,7 @@ public class StageTwo extends AppCompatActivity {
             public void run() {
 
                 try {
-                    updateMovements();
+                    updateMovements(ennemies, displayWidth, displayHeight);
                 }
                 catch (ConcurrentModificationException exception) {
                     // erreur si l'exec prend plus de 20ms
@@ -152,20 +138,6 @@ public class StageTwo extends AppCompatActivity {
         executor.scheduleAtFixedRate(movements, 0, 20, TimeUnit.MILLISECONDS);
     }
 
-    private double degree2Radian(double degree) {
-        return degree * Math.PI / 180;
-    }
-
-    private Ennemi createEnnemi(int width, int height, float x, float y) {
-        GifImageView gif = new GifImageView(this);
-        gif.setImageResource(R.drawable.goomba);
-        gif.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
-        double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
-        gif.setX(x);
-        gif.setY(y);
-        Ennemi ennemi = new Ennemi(this, gif, direction, 5);
-        return ennemi;
-    }
 
     private void createTimer() {
         //set delay and period as 1000
@@ -202,39 +174,7 @@ public class StageTwo extends AppCompatActivity {
         return --sec;
     }
 
-    private void updateMovements(){
-        for (int i = 0; i < ennemies.size(); i++) {
 
-            GifImageView gif = ennemies.get(i).getGif();
-            double direction = ennemies.get(i).getDirection();
-
-            float x = gif.getX();
-            float y = gif.getY();
-
-            float speed = 10;
-
-            x += Math.cos(direction) * speed;
-            y += Math.sin(direction) * speed;
-
-            //gif.setX(x);
-            //gif.setY(y);
-            ennemies.get(i).setGif(x,y);
-
-            if (x > displayWidth-ennemies.get(i).getGif().getWidth()) {
-                ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                gif.setX(displayWidth-ennemies.get(i).getGif().getWidth()-1);
-            } else if (x < 0) {
-                ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                gif.setX(1);
-            } else if (y > displayHeight-ennemies.get(i).getGif().getHeight()) {
-                ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
-                gif.setY(displayHeight-ennemies.get(i).getGif().getHeight()-1);
-            } else if (y < 0) {
-                ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
-                gif.setY(1);
-            }
-        }
-    }
     private void endGame() {
         Log.i("ENDGAME","TEST");
         if (ennemies.size() != 0) {
@@ -249,7 +189,7 @@ public class StageTwo extends AppCompatActivity {
         logo.setImageResource(R.drawable.kado_logo);
         ecran.addView(logo);
         TextView accueil = findViewById(R.id.accueil2);
-        accueil.setText("Retour à l'écran titre");
+        accueil.setText("Retour a l'ecran titre");
         accueil.setTextSize(40);
         accueil.setOnClickListener(w -> {
             this.finish();

@@ -1,12 +1,10 @@
 package com.example.kadoshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -17,11 +15,13 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import static com.example.kadoshooter.AbstractStage.*;
 
-import com.example.kadoshooter.Ennemi;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -38,13 +38,17 @@ public class StageThree extends AppCompatActivity {
     private int displayWidth;
     private int displayHeight;
 
-
+    private TextView timer;
     private Integer if1noFilter;
 
     private Runnable hit;
     private ScheduledExecutorService executorHit;
 
     private MediaPlayer theme3;
+
+    // TIMER
+    private int sec = 26;
+    private Timer countdown;
 
     private float bowserSpeed = (float) 5;
     private float speed = (float) 5;
@@ -66,6 +70,9 @@ public class StageThree extends AppCompatActivity {
 
         setContentView(R.layout.activity_stage_three);
 
+        timer = findViewById(R.id.timer3);
+        createTimer();
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         displayWidth = displayMetrics.widthPixels;
@@ -78,15 +85,11 @@ public class StageThree extends AppCompatActivity {
 
         for (int i=0; i < 1; i++) {
 
-
-            GifImageView gif = new GifImageView(this);
-            gif.setImageResource(R.drawable.bowser);
-            gif.setLayoutParams(new RelativeLayout.LayoutParams(300,300));
-            double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
+            // angle aléatoire entre 0 et 360°
             int x = (int)(Math.random() * (displayWidth-700));
             int y = (int)(Math.random() * (displayHeight-700));
 
-            bowser = createEnnemi(700, 700, x, y, R.drawable.bowser, bowserSpeed);
+            bowser = AbstractStage.createEnnemi(700, 700, x, y, R.drawable.bowser, bowserSpeed, this);
 
             bowser.getGif().setOnClickListener(v -> {
                 if1noFilter = 0;
@@ -112,7 +115,7 @@ public class StageThree extends AppCompatActivity {
                 executorHit.scheduleAtFixedRate(hit, 0, 100, TimeUnit.MILLISECONDS);
 
                 nbClick++;
-                if(nbClick==100){
+                if(nbClick==20){
                     ViewGroup parentView = (ViewGroup) v.getParent();
                     parentView.removeView(v);
                     ennemies.remove(bowser);
@@ -122,14 +125,14 @@ public class StageThree extends AppCompatActivity {
                 }
 
                 if (ennemies.size() == 0) {
+                    countdown.cancel();
+                    timer.setText("");
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
                     ecran.addView(logo);
-                    TextView accueil = new TextView(this);
-                    accueil.setGravity(Gravity.CENTER);
+                    TextView accueil = findViewById(R.id.accueil3);
                     accueil.setText("Retour à l'écran titre");
                     accueil.setTextSize(40);
-                    ecran.addView(accueil);
                     accueil.setOnClickListener(w -> {
                         this.finish();
                         Intent intent = new Intent(this, MainActivity.class);
@@ -155,7 +158,7 @@ public class StageThree extends AppCompatActivity {
                     }
 
 
-                    updateMovements();
+                    AbstractStage.updateMovements(ennemies, displayWidth, displayHeight);
                 }
                 catch (ConcurrentModificationException exception) {
                     // erreur si l'exec prend plus de 20ms
@@ -168,52 +171,6 @@ public class StageThree extends AppCompatActivity {
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(movements, 0, 20, TimeUnit.MILLISECONDS);
-    }
-
-    private double degree2Radian(double degree) {
-        return degree * Math.PI / 180;
-    }
-
-    private Ennemi createEnnemi(int width, int height, float x, float y, int file, float spd) {
-        GifImageView gif = new GifImageView(this);
-        gif.setImageResource(file);
-        gif.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
-        double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
-        gif.setX(x);
-        gif.setY(y);
-        Ennemi ennemi = new Ennemi(this, gif, direction, spd);
-        return ennemi;
-    }
-
-    private void updateMovements(){
-        //Log.i("RUNNING","JE RUN");
-        for (int i = 0; i < ennemies.size(); i++) {
-
-            GifImageView gif = ennemies.get(i).getGif();
-            double direction = ennemies.get(i).getDirection();
-
-            float x = gif.getX();
-            float y = gif.getY();
-
-            x += Math.cos(direction) * ennemies.get(i).getSpeed();
-            y += Math.sin(direction) * ennemies.get(i).getSpeed();
-
-            ennemies.get(i).setGif(x,y);
-
-            if (x > displayWidth-ennemies.get(i).getGif().getWidth()) {
-                ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                gif.setX(displayWidth-ennemies.get(i).getGif().getWidth()-1);
-            } else if (x < 0) {
-                ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-                gif.setX(1);
-            } else if (y > displayHeight-ennemies.get(i).getGif().getHeight()) {
-                ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
-                gif.setY(displayHeight-ennemies.get(i).getGif().getHeight()-1);
-            } else if (y < 0) {
-                ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
-                gif.setY(1);
-            }
-        }
     }
 
     private void cancelExecutor() {
@@ -244,7 +201,7 @@ public class StageThree extends AppCompatActivity {
     }
 
     private void createGoombaOnUIThread() {
-        Ennemi goomba = createEnnemi(300, 300, bowser.getGif().getX(), bowser.getGif().getY(), R.drawable.goomba, speed);
+        Ennemi goomba = createEnnemi(300, 300, bowser.getGif().getX(), bowser.getGif().getY(), R.drawable.goomba, speed, this);
 
         ecran.addView(goomba.getGif());
 
@@ -255,18 +212,62 @@ public class StageThree extends AppCompatActivity {
             parentView.removeView(v);
             ennemies.remove(goomba);
             if (ennemies.size() == 0) {
+                countdown.cancel();
+                timer.setText("");
                 ImageView logo = new ImageView(context);
                 logo.setImageResource(R.drawable.kado_logo);
                 ecran.addView(logo);
-                TextView accueil = new TextView(context);
-                accueil.setGravity(Gravity.CENTER);
-                accueil.setText("Retour à l'écran titre");
+                TextView accueil = findViewById(R.id.accueil3);
+                accueil.setText("Retour a l'ecran titre");
                 accueil.setTextSize(40);
-                ecran.addView(accueil);
                 accueil.setOnClickListener(w -> {
                     goBackToMenu();
                 });
             }
         });
+    }
+
+    private void createTimer() {
+        //set delay and period as 1000
+        int del = 500;
+        int per = 1000;
+        countdown = new Timer();
+        timer.setTextSize(200);
+        //System.out.println(sec);
+        //performs the specifiedd task at certain intervals
+        countdown.scheduleAtFixedRate(new TimerTask()
+        {
+            //task to be performed
+            public void run()
+            {
+                timer.setText(""+seti());
+            }
+        }, del, per);
+        //set interval
+    }
+
+    private final int seti() {
+        //if interval is 1, cancel
+        if (sec == 1) {
+            countdown.cancel();
+
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i("ISSTOPPED","YES22");
+                    endGame(ennemies, ecran, timer, context);
+                    TextView accueil = findViewById(R.id.accueil3);
+                    accueil.setText("Retour a l'ecran titre");
+                    accueil.setTextSize(40);
+                    accueil.setOnClickListener(w -> {
+                        finish();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        startActivity(intent);
+                    });
+                }
+            });
+            //endGame();
+        }
+        return --sec;
     }
 }
