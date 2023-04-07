@@ -69,11 +69,20 @@ public class StageOne extends AppCompatActivity {
         theme1 = MediaPlayer.create(this, R.raw.theme1);
         theme1.start();
 
+        int eskeOb1 = (int) (Math.random() * 5);
+        int drawable;
+        if (eskeOb1 == 1)
+             drawable = R.drawable.ob1;
+        else
+            drawable = R.drawable.koopa;
+
         for (int i=0; i < 20; i++) {
 
             MediaPlayer koopaDeath = MediaPlayer.create(this, R.raw.koopa_death);
             GifImageView gif = new GifImageView(this);
-            gif.setImageResource(R.drawable.koopa);
+
+
+            gif.setImageResource(drawable);
             gif.setLayoutParams(new RelativeLayout.LayoutParams(200,200));
             double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
             gif.setX((int)(Math.random() * (displayWidth-200)));
