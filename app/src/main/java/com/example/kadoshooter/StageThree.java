@@ -8,8 +8,6 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
@@ -45,6 +43,8 @@ public class StageThree extends AppCompatActivity {
     private ScheduledExecutorService executorHit;
 
     private MediaPlayer theme3;
+    private MediaPlayer bowserDeath;
+    private MediaPlayer goombaDeath;
 
     // TIMER
     private int sec = 26;
@@ -81,6 +81,9 @@ public class StageThree extends AppCompatActivity {
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
         theme3 = MediaPlayer.create(this, R.raw.theme3);
+        bowserDeath = MediaPlayer.create(this, R.raw.bowser_death);
+        goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
+
         theme3.start();
 
         for (int i=0; i < 1; i++) {
@@ -100,7 +103,6 @@ public class StageThree extends AppCompatActivity {
                             bowser.getGif().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
                         }
                         else if (if1noFilter == 1) {
-                            Log.i("RUNHIT","YES");
                             clearBowserFilter();
                             cancelExecutor();
                         }
@@ -115,10 +117,11 @@ public class StageThree extends AppCompatActivity {
                 executorHit.scheduleAtFixedRate(hit, 0, 100, TimeUnit.MILLISECONDS);
 
                 nbClick++;
-                if(nbClick==20){
+                if(nbClick==100){
                     ViewGroup parentView = (ViewGroup) v.getParent();
                     parentView.removeView(v);
                     ennemies.remove(bowser);
+                    bowserDeath.start();
                 }
                 if(nbClick%5==0){
                     bowser.setSpeed(bowser.getSpeed() + 4);
@@ -131,7 +134,7 @@ public class StageThree extends AppCompatActivity {
                     logo.setImageResource(R.drawable.kado_logo);
                     ecran.addView(logo);
                     TextView accueil = findViewById(R.id.accueil3);
-                    accueil.setText("Retour à l'écran titre");
+                    accueil.setText("Win \n\n Retour à l'écran titre");
                     accueil.setTextSize(40);
                     accueil.setOnClickListener(w -> {
                         this.finish();
@@ -190,8 +193,6 @@ public class StageThree extends AppCompatActivity {
     }
 
     private void createGoomba(){
-        Log.i("ENNEMI","CREATE");
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -206,11 +207,11 @@ public class StageThree extends AppCompatActivity {
         ecran.addView(goomba.getGif());
 
         ennemies.add(goomba);
-        Log.i("ENNEMI",ennemies.toString());
         goomba.getGif().setOnClickListener(v -> {
             ViewGroup parentView = (ViewGroup) v.getParent();
             parentView.removeView(v);
             ennemies.remove(goomba);
+            goombaDeath.start();
             if (ennemies.size() == 0) {
                 countdown.cancel();
                 timer.setText("");
@@ -218,7 +219,7 @@ public class StageThree extends AppCompatActivity {
                 logo.setImageResource(R.drawable.kado_logo);
                 ecran.addView(logo);
                 TextView accueil = findViewById(R.id.accueil3);
-                accueil.setText("Retour a l'ecran titre");
+                accueil.setText("Win \n\n Retour a l'ecran titre");
                 accueil.setTextSize(40);
                 accueil.setOnClickListener(w -> {
                     goBackToMenu();
@@ -254,10 +255,9 @@ public class StageThree extends AppCompatActivity {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("ISSTOPPED","YES22");
                     endGame(ennemies, ecran, timer, context);
                     TextView accueil = findViewById(R.id.accueil3);
-                    accueil.setText("Retour a l'ecran titre");
+                    accueil.setText("Game Over \n\n Retour a l'ecran titre");
                     accueil.setTextSize(40);
                     accueil.setOnClickListener(w -> {
                         finish();

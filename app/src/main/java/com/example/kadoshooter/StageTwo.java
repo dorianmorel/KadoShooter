@@ -105,7 +105,7 @@ public class StageTwo extends AppCompatActivity {
                     ecran.addView(logo);
                     accueil = findViewById(R.id.accueil2);
                     accueil.setGravity(Gravity.CENTER);
-                    accueil.setText("Retour a l'ecran titre");
+                    accueil.setText("Win \n\n Retour a l'ecran titre");
                     accueil.setTextSize(40);
                     accueil.setOnClickListener(w -> {
                         this.finish();
@@ -176,10 +176,8 @@ public class StageTwo extends AppCompatActivity {
 
 
     private void endGame() {
-        Log.i("ENDGAME","TEST");
         if (ennemies.size() != 0) {
             for (Ennemi ennemi : ennemies) {
-                Log.i("ENDGAME", "OUI");
                 ecran.removeView(ennemi.getGif());
             }
         }
@@ -189,7 +187,7 @@ public class StageTwo extends AppCompatActivity {
         logo.setImageResource(R.drawable.kado_logo);
         ecran.addView(logo);
         TextView accueil = findViewById(R.id.accueil2);
-        accueil.setText("Retour a l'ecran titre");
+        accueil.setText("Game Over \n\n Retour a l'ecran titre");
         accueil.setTextSize(40);
         accueil.setOnClickListener(w -> {
             this.finish();

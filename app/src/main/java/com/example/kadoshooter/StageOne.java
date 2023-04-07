@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
@@ -103,7 +101,7 @@ public class StageOne extends AppCompatActivity {
                     logo.setImageResource(R.drawable.kado_logo);
                     ecran.addView(logo);
                     accueil = findViewById(R.id.accueil);
-                    accueil.setText("Retour a l'ecran titre");
+                    accueil.setText("Win \n\n Retour a l'ecran titre");
                     accueil.setTextSize(40);
                     accueil.setOnClickListener(w -> {
                         this.finish();
@@ -117,21 +115,16 @@ public class StageOne extends AppCompatActivity {
             ennemies.add(koopa);
         }
 
-
-        // A CHANGER
         Runnable movements = new Runnable() {
             public void run() {
-
                 try {
                     updateMovements(ennemies, displayWidth, displayHeight);
                 }
                 catch (ConcurrentModificationException exception) {
                     // erreur si l'exec prend plus de 20ms
                 }
-
             }
         };
-
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(movements, 0, 20, TimeUnit.MILLISECONDS);
     }
@@ -166,7 +159,7 @@ public class StageOne extends AppCompatActivity {
                 public void run() {
                     endGame(ennemies, ecran, timer, context);
                     TextView accueil = findViewById(R.id.accueil);
-                    accueil.setText("Retour a l'ecran titre");
+                    accueil.setText("Game Over \n\n Retour a l'ecran titre");
                     accueil.setTextSize(40);
                     accueil.setOnClickListener(w -> {
                         finish();
