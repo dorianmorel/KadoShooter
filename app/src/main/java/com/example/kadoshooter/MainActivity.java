@@ -24,31 +24,32 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         setContentView(R.layout.activity_main);
-
-
     }
 
     public void onClickStage1(View view) {
         Intent intent = new Intent(this, StageOne.class);
         startActivity(intent);
-        this.finish();
     }
     public void onClickStage2(View view) {
         Intent intent = new Intent(this, StageTwo.class);
         startActivity(intent);
-        this.finish();
     }
     public void onClickStage3(View view) {
         Intent intent = new Intent(this, StageThree.class);
         startActivity(intent);
-        this.finish();
     }
-
+    public void onClickCredits(View view) {
+        Intent intent = new Intent(this, Credits.class);
+        startActivity(intent);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();  // Always call the superclass method first
+        mainTheme.start();
+    }
     @Override
     protected void onPause() {
         super.onPause();  // Always call the superclass method first
-        mainTheme.stop();
+        mainTheme.pause();
     }
-
-
 }

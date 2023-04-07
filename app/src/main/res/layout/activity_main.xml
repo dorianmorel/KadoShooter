@@ -24,8 +24,9 @@
         android:gravity="center_horizontal|center_vertical"
         android:text="Tap the ennemies as fast as you can !"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
-        android:textStyle="bold|italic" />
+        android:textSize="16dp"
+        android:textStyle="italic"
+        android:fontFamily="@font/mario"/>
 
     <TextView
         android:id="@+id/stage1"
@@ -39,7 +40,7 @@
         android:text="STAGE 1"
         android:textColor="#FFFFFF"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/mario"/>
 
     <TextView
         android:id="@+id/stage2"
@@ -53,7 +54,7 @@
         android:text="STAGE 2"
         android:textColor="#FFFFFF"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/mario"/>
 
     <TextView
         android:id="@+id/stage3"
@@ -67,7 +68,21 @@
         android:text="BOSS FIGHT"
         android:textColor="#FFFFFF"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/mario"/>
+
+    <TextView
+        android:id="@+id/credits"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:background="@drawable/card_back_o"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onClickCredits"
+        android:text="CREDITS"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:fontFamily="@font/mario"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -77,8 +92,8 @@
         android:gravity="center_horizontal|bottom"
         android:text="- By ARSLAN Kadim and MOREL Dorian -"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:textSize="16dp"
+        android:fontFamily="@font/mario"
         />
 
 </LinearLayout>

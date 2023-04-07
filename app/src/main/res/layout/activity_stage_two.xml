@@ -18,7 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:fontFamily="@font/mario"/>
 
         <TextView
             android:id="@+id/timer2"
@@ -26,7 +28,7 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
             android:textColor="#000000"
-            />
+            android:fontFamily="@font/mario"/>
     </RelativeLayout>
 
 </LinearLayout>
