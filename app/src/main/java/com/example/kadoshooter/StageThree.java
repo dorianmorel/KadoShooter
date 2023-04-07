@@ -149,7 +149,7 @@ public class StageThree extends AppCompatActivity {
             public void run() {
                 counter+=20;
                 try {
-                    if (counter%2000 == 0) {
+                    if (counter%1500 == 0) {
                         if (ennemies.get(0).getSpeed() != 5)
                             createGoomba();
                     }
