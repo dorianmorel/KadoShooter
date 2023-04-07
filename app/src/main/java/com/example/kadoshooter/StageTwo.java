@@ -41,7 +41,7 @@ public class StageTwo extends AppCompatActivity {
     private TextView accueil;
 
     // TIMER
-    private int sec = 21;
+    private int sec = 16;
     private Timer countdown;
 
     private MediaPlayer theme2;
@@ -220,12 +220,19 @@ public class StageTwo extends AppCompatActivity {
             //gif.setY(y);
             ennemies.get(i).setGif(x,y);
 
-            if (x > displayWidth-200 || x < 0)
-                //directions.set(i, degree2Radian(180) - direction);
+            if (x > displayWidth-ennemies.get(i).getGif().getWidth()) {
                 ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
-            else if (y > displayHeight-200 || y < 0)
-                //directions.set(i, -direction);
+                gif.setX(displayWidth-ennemies.get(i).getGif().getWidth()-1);
+            } else if (x < 0) {
+                ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
+                gif.setX(1);
+            } else if (y > displayHeight-ennemies.get(i).getGif().getHeight()) {
                 ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
+                gif.setY(displayHeight-ennemies.get(i).getGif().getHeight()-1);
+            } else if (y < 0) {
+                ennemies.get(i).setDirection(-ennemies.get(i).getDirection());
+                gif.setY(1);
+            }
         }
     }
     private void endGame() {
