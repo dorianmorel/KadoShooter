@@ -163,7 +163,7 @@ public class StageTwo extends AppCompatActivity {
         double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
         gif.setX(x);
         gif.setY(y);
-        Ennemi ennemi = new Ennemi(this, gif, direction);
+        Ennemi ennemi = new Ennemi(this, gif, direction, 5);
         return ennemi;
     }
 

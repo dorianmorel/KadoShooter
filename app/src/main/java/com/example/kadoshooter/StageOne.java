@@ -79,7 +79,7 @@ public class StageOne extends AppCompatActivity {
             gif.setX((int)(Math.random() * (displayWidth-200)));
             gif.setY((int)(Math.random() * (displayHeight-200)));
 
-            Ennemi ennemi = new Ennemi(this, gif, direction);
+            Ennemi ennemi = new Ennemi(this, gif, direction, 5);
 
             ennemi.getGif().setOnClickListener(v -> {
                 //Log.i("AAAA", "CLICK");

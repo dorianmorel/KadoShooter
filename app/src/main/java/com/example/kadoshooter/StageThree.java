@@ -3,8 +3,10 @@ package com.example.kadoshooter;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -44,7 +46,14 @@ public class StageThree extends AppCompatActivity {
 
     private MediaPlayer theme3;
 
-    private Float speed = (float) 5;
+    private float bowserSpeed = (float) 5;
+    private float speed = (float) 5;
+
+    private Ennemi bowser;
+
+    Context context = this;
+
+    private RelativeLayout ecran;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +71,7 @@ public class StageThree extends AppCompatActivity {
         displayWidth = displayMetrics.widthPixels;
         displayHeight = displayMetrics.heightPixels;
 
-        RelativeLayout ecran = (RelativeLayout) findViewById(R.id.ecran);
+        ecran = (RelativeLayout) findViewById(R.id.ecran);
 
         theme3 = MediaPlayer.create(this, R.raw.theme3);
         theme3.start();
@@ -77,16 +86,15 @@ public class StageThree extends AppCompatActivity {
             int x = (int)(Math.random() * (displayWidth-700));
             int y = (int)(Math.random() * (displayHeight-700));
 
-            Ennemi ennemi = createEnnemi(700, 700, x, y);
+            bowser = createEnnemi(700, 700, x, y, R.drawable.bowser, bowserSpeed);
 
-            ennemi.getGif().setOnClickListener(v -> {
-                //ennemi.getGif().setColorFilter(ContextCompat.getColor(this,R.color.orange));
+            bowser.getGif().setOnClickListener(v -> {
                 if1noFilter = 0;
                 hit = new Runnable() {
                     @Override
                     public void run() {
                         if (if1noFilter == 0) {
-                            ennemi.getGif().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                            bowser.getGif().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
                         }
                         else if (if1noFilter == 1) {
                             Log.i("RUNHIT","YES");
@@ -97,7 +105,7 @@ public class StageThree extends AppCompatActivity {
                     }
 
                     public void clearBowserFilter() {
-                        ennemi.getGif().clearColorFilter();
+                        bowser.getGif().clearColorFilter();
                     }
                 };
                 executorHit = Executors.newScheduledThreadPool(1);
@@ -107,10 +115,10 @@ public class StageThree extends AppCompatActivity {
                 if(nbClick==100){
                     ViewGroup parentView = (ViewGroup) v.getParent();
                     parentView.removeView(v);
-                    ennemies.remove(ennemi);
+                    ennemies.remove(bowser);
                 }
                 if(nbClick%5==0){
-                    speed += (float) 5;
+                    bowser.setSpeed(bowser.getSpeed() + 4);
                 }
 
                 if (ennemies.size() == 0) {
@@ -129,25 +137,30 @@ public class StageThree extends AppCompatActivity {
                     });
                 }
             });
-
-            //double direction = degree2Radian(45);
-
-            ecran.addView(ennemi.getGif());
-            ennemies.add(ennemi);
-            //gifs.add(gif);
-            //directions.add(direction);
+            ecran.addView(bowser.getGif());
+            ennemies.add(bowser);
         }
 
 
         // A CHANGER
         Runnable movements = new Runnable() {
-            public void run() {
+            private int counter = 0;
 
+            public void run() {
+                counter+=20;
                 try {
+                    if (counter%2000 == 0) {
+                        if (ennemies.get(0).getSpeed() != 5)
+                            createGoomba();
+                    }
+
+
                     updateMovements();
                 }
                 catch (ConcurrentModificationException exception) {
                     // erreur si l'exec prend plus de 20ms
+                }
+                catch (Exception exception) {
                 }
 
             }
@@ -161,30 +174,31 @@ public class StageThree extends AppCompatActivity {
         return degree * Math.PI / 180;
     }
 
-    private Ennemi createEnnemi(int width, int height, float x, float y) {
+    private Ennemi createEnnemi(int width, int height, float x, float y, int file, float spd) {
         GifImageView gif = new GifImageView(this);
-        gif.setImageResource(R.drawable.bowser);
+        gif.setImageResource(file);
         gif.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
         double direction = degree2Radian(Math.random() * 360); // angle aléatoire entre 0 et 360°
         gif.setX(x);
         gif.setY(y);
-        Ennemi ennemi = new Ennemi(this, gif, direction);
+        Ennemi ennemi = new Ennemi(this, gif, direction, spd);
         return ennemi;
     }
 
-        private void updateMovements(){
-            for (int i = 0; i < ennemies.size(); i++) {
+    private void updateMovements(){
+        //Log.i("RUNNING","JE RUN");
+        for (int i = 0; i < ennemies.size(); i++) {
 
-                GifImageView gif = ennemies.get(i).getGif();
-                double direction = ennemies.get(i).getDirection();
+            GifImageView gif = ennemies.get(i).getGif();
+            double direction = ennemies.get(i).getDirection();
 
-                float x = gif.getX();
-                float y = gif.getY();
+            float x = gif.getX();
+            float y = gif.getY();
 
-                x += Math.cos(direction) * speed;
-                y += Math.sin(direction) * speed;
+            x += Math.cos(direction) * ennemies.get(i).getSpeed();
+            y += Math.sin(direction) * ennemies.get(i).getSpeed();
 
-                ennemies.get(i).setGif(x,y);
+            ennemies.get(i).setGif(x,y);
 
             if (x > displayWidth-ennemies.get(i).getGif().getWidth()) {
                 ennemies.get(i).setDirection(degree2Radian(180) - ennemies.get(i).getDirection());
@@ -210,5 +224,49 @@ public class StageThree extends AppCompatActivity {
     protected void onPause() {
         super.onPause();  // Always call the superclass method first
         theme3.stop();
+    }
+
+    private void goBackToMenu() {
+        this.finish();
+        Intent intent = new Intent(context, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void createGoomba(){
+        Log.i("ENNEMI","CREATE");
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                createGoombaOnUIThread();
+            }
+        });
+    }
+
+    private void createGoombaOnUIThread() {
+        Ennemi goomba = createEnnemi(300, 300, bowser.getGif().getX(), bowser.getGif().getY(), R.drawable.goomba, speed);
+
+        ecran.addView(goomba.getGif());
+
+        ennemies.add(goomba);
+        Log.i("ENNEMI",ennemies.toString());
+        goomba.getGif().setOnClickListener(v -> {
+            ViewGroup parentView = (ViewGroup) v.getParent();
+            parentView.removeView(v);
+            ennemies.remove(goomba);
+            if (ennemies.size() == 0) {
+                ImageView logo = new ImageView(context);
+                logo.setImageResource(R.drawable.kado_logo);
+                ecran.addView(logo);
+                TextView accueil = new TextView(context);
+                accueil.setGravity(Gravity.CENTER);
+                accueil.setText("Retour à l'écran titre");
+                accueil.setTextSize(40);
+                ecran.addView(accueil);
+                accueil.setOnClickListener(w -> {
+                    goBackToMenu();
+                });
+            }
+        });
     }
 }
