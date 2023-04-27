@@ -16,7 +16,8 @@ import java.util.TimerTask;
 import pl.droidsonroids.gif.GifImageView;
 
 public abstract class AbstractStage extends AppCompatActivity {
-
+    
+    // Fonction permettant de créer un ennemi par la création d'une ImageView, mais avec un gif
     public static Ennemi createEnnemi(int width, int height, float x, float y, int file, float spd, Context context) {
         GifImageView gif = new GifImageView(context);
         gif.setImageResource(file);
@@ -27,13 +28,14 @@ public abstract class AbstractStage extends AppCompatActivity {
         Ennemi ennemi = new Ennemi(context, gif, direction, spd);
         return ennemi;
     }
-
+    
+    // Fonction qui convertit un angle radian, en degré
     public static double degree2Radian(double degree) {
         return degree * Math.PI / 180;
     }
-
+    
+    //Fonction qui met à jour la position d'un ennemi, et la direction dans laquelle il se dirige, si nécessaire de la changer (collisions comprises)
     public static void updateMovements(ArrayList<Ennemi> ennemies, int displayWidth, int displayHeight){
-        //Log.i("RUNNING","JE RUN");
         for (int i = 0; i < ennemies.size(); i++) {
 
             GifImageView gif = ennemies.get(i).getGif();
@@ -62,7 +64,8 @@ public abstract class AbstractStage extends AppCompatActivity {
             }
         }
     }
-
+    
+    //Fonction permettant de lancer le processus de fin d'un niveau, lorsque l'on perd / gagne
     public static void endGame(ArrayList<Ennemi> ennemies, RelativeLayout ecran, TextView timer, Context context) {
 
         for (Ennemi ennemi : ennemies) {
