@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
 
+//Troisième niveau
 public class StageThree extends AbstractStage {
 
     private int nbClick = 0;
@@ -57,7 +58,8 @@ public class StageThree extends AbstractStage {
     Context context = this;
 
     private RelativeLayout ecran;
-
+    
+    //Création du niveau
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,7 +70,8 @@ public class StageThree extends AbstractStage {
         getSupportActionBar().hide();
 
         setContentView(R.layout.activity_stage_three);
-
+        
+        //Lancement du timer
         timer = findViewById(R.id.timer3);
         createTimer();
 
@@ -84,7 +87,8 @@ public class StageThree extends AbstractStage {
         goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
 
         theme3.start();
-
+        
+        //Création du Bowser, boss final
         for (int i=0; i < 1; i++) {
 
             // angle aléatoire entre 0 et 360°
@@ -92,7 +96,9 @@ public class StageThree extends AbstractStage {
             int y = (int)(Math.random() * (displayHeight-700));
 
             bowser = createEnnemi(700, 700, x, y, R.drawable.bowser, bowserSpeed, this);
-
+            
+            
+            //Définition des actions menées lorsque l'on clique sur Bowser
             bowser.getGif().setOnClickListener(v -> {
                 if1noFilter = 0;
                 hit = new Runnable() {
@@ -114,7 +120,8 @@ public class StageThree extends AbstractStage {
                 };
                 executorHit = Executors.newScheduledThreadPool(1);
                 executorHit.scheduleAtFixedRate(hit, 0, 100, TimeUnit.MILLISECONDS);
-
+                
+                //Si on clique 100 fois sur Bowser, il meurt
                 nbClick++;
                 if(nbClick==100){
                     ViewGroup parentView = (ViewGroup) v.getParent();
@@ -122,6 +129,8 @@ public class StageThree extends AbstractStage {
                     ennemies.remove(bowser);
                     bowserDeath.start();
                 }
+                
+                //Tous les 5 clics sur Bowser, sa vitesse augmente
                 if(nbClick%5==0){
                     bowser.setSpeed(bowser.getSpeed() + 4);
                 }
@@ -146,8 +155,7 @@ public class StageThree extends AbstractStage {
             ennemies.add(bowser);
         }
 
-
-        // A CHANGER
+        //Création d'un goomba toutes les secondes et demi ainsi que mise à jour de la position des ennemis
         Runnable movements = new Runnable() {
             private int counter = 0;
 
@@ -174,7 +182,7 @@ public class StageThree extends AbstractStage {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(movements, 0, 20, TimeUnit.MILLISECONDS);
     }
-
+    
     private void cancelExecutor() {
         executorHit.shutdown();
     }
@@ -184,13 +192,15 @@ public class StageThree extends AbstractStage {
         super.onPause();  // Always call the superclass method first
         theme3.stop();
     }
-
+    
+    //On retourne au menu
     private void goBackToMenu() {
         this.finish();
         Intent intent = new Intent(context, MainActivity.class);
         startActivity(intent);
     }
-
+    
+    //Creation d'un goomba
     private void createGoomba(){
         runOnUiThread(new Runnable() {
             @Override
@@ -199,7 +209,8 @@ public class StageThree extends AbstractStage {
             }
         });
     }
-
+    
+    //Création d'un goomba, mais dans le thread parent
     private void createGoombaOnUIThread() {
         Ennemi goomba = createEnnemi(300, 300, bowser.getGif().getX(), bowser.getGif().getY(), R.drawable.goomba, speed, this);
 
@@ -226,7 +237,8 @@ public class StageThree extends AbstractStage {
             }
         });
     }
-
+    
+    //Création du timer
     private void createTimer() {
         //set delay and period as 1000
         int del = 500;
@@ -245,7 +257,8 @@ public class StageThree extends AbstractStage {
         }, del, per);
         //set interval
     }
-
+    
+    //Fonction permettant la mise à jour du timer
     private final int seti() {
         //if interval is 1, cancel
         if (sec == 1) {
