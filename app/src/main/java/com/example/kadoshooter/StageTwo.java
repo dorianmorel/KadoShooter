@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+//Deuxième niveau
 public class StageTwo extends AbstractStage {
 
     private int nbClick = 0;
@@ -41,7 +42,7 @@ public class StageTwo extends AbstractStage {
 
     private MediaPlayer theme2;
 
-
+    //Création du niveau
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -52,7 +53,8 @@ public class StageTwo extends AbstractStage {
         getSupportActionBar().hide();
 
         setContentView(R.layout.activity_stage_two);
-
+        
+        //Création du timer
         timer = findViewById(R.id.timer2);
         createTimer();
 
@@ -65,19 +67,23 @@ public class StageTwo extends AbstractStage {
 
         theme2 = MediaPlayer.create(this, R.raw.theme2);
         theme2.start();
-
+        
+        //Création des 15 goombas
         for (int i=0; i < 15; i++) {
             MediaPlayer goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
             int x = (int)(Math.random() * (displayWidth-300));
             int y = (int)(Math.random() * (displayHeight-300));
 
             Ennemi ennemi = createEnnemi(300, 300, x, y, R.drawable.goomba, 5, this);
-
+            
+            //Définition des actions menées lorsque l'on clique sur un Goomba
             ennemi.getGif().setOnClickListener(v -> {
                 ViewGroup parentView = (ViewGroup) v.getParent();
                 parentView.removeView(v);
                 goombaDeath.start();
                 ennemies.remove(ennemi);
+                
+                //Création de 2 plus petits goombas (simulation d'une division en 2 du goomba initial)
                 Ennemi ennemi1 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY(), R.drawable.goomba, 5, this);
                 ecran.addView(ennemi1.getGif());
                 ennemies.add(ennemi1);
@@ -98,7 +104,7 @@ public class StageTwo extends AbstractStage {
                     if (ennemies.size() == 0)
                         endGame();
                 });
-
+            
                 if (ennemies.size() == 0) {
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
@@ -120,7 +126,7 @@ public class StageTwo extends AbstractStage {
         }
 
 
-        // A CHANGER
+        //Runnable permettant de mettre à jour la position des ennemis
         Runnable movements = new Runnable() {
             public void run() {
 
@@ -138,7 +144,7 @@ public class StageTwo extends AbstractStage {
         executor.scheduleAtFixedRate(movements, 0, 20, TimeUnit.MILLISECONDS);
     }
 
-
+    //Création du timer
     private void createTimer() {
         //set delay and period as 1000
         int del = 500;
@@ -157,7 +163,8 @@ public class StageTwo extends AbstractStage {
         }, del, per);
         //set interval
     }
-
+    
+    //Mise à jour du timer
     private final int seti() {
         //if interval is 1, cancel
         if (sec == 1) {
@@ -174,7 +181,7 @@ public class StageTwo extends AbstractStage {
         return --sec;
     }
 
-
+    //Fin de la partie
     private void endGame() {
         if (ennemies.size() != 0) {
             for (Ennemi ennemi : ennemies) {
