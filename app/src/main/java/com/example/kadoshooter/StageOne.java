@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
 
+//Premier niveau
 public class StageOne extends AbstractStage {
 
     private int nbClick = 0;
@@ -46,7 +47,7 @@ public class StageOne extends AbstractStage {
 
     private Context context;
 
-
+    //Création du niveau
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -59,6 +60,7 @@ public class StageOne extends AbstractStage {
 
         setContentView(R.layout.activity_stage_one);
 
+        //Lancement du timer
         timer = findViewById(R.id.timer);
         createTimer();
 
@@ -72,13 +74,15 @@ public class StageOne extends AbstractStage {
         theme1 = MediaPlayer.create(this, R.raw.theme1);
         theme1.start();
 
+        //Petit EasterEgg qui, avec une chance sur 5, remplace les Koopas par un gif d'Aubin EBANO, élève de DDIM
         int eskeOb1 = (int) (Math.random() * 5);
         int drawable;
         if (eskeOb1 == 1)
             drawable = R.drawable.ob1;
         else
             drawable = R.drawable.koopa;
-
+        
+        //Création et placement des ennemis
         for (int i=0; i < 20; i++) {
 
             MediaPlayer koopaDeath = MediaPlayer.create(this, R.raw.koopa_death);
@@ -113,7 +117,8 @@ public class StageOne extends AbstractStage {
             ecran.addView(koopa.getGif());
             ennemies.add(koopa);
         }
-
+        
+        //Runnable permettant d'actualiser les mouvements toutes les 20 millisecondes
         Runnable movements = new Runnable() {
             public void run() {
                 try {
@@ -128,7 +133,7 @@ public class StageOne extends AbstractStage {
         executor.scheduleAtFixedRate(movements, 0, 20, TimeUnit.MILLISECONDS);
     }
 
-
+    //Création du timer
     private void createTimer() {
         //set delay and period as 1000
             int del = 500;
@@ -145,9 +150,9 @@ public class StageOne extends AbstractStage {
                     timer.setText(""+seti(countdown));
                 }
             }, del, per);
-        //set interval
     }
-
+    
+    //Fonction liée au timer, permettant de le mettre à jour
     private final int seti(Timer countdown) {
         //if interval is 1, cancel
         if (sec == 1) {
