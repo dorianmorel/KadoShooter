@@ -6,10 +6,14 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Window;
 
+//Cette activité correspond à la page des Crédits du jeu
 public class Credits extends AppCompatActivity {
-
+    
     private MediaPlayer creditsTheme;
     @Override
+    
+    
+    //On crée l'écran et on lance la musique
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -22,10 +26,11 @@ public class Credits extends AppCompatActivity {
 
         setContentView(R.layout.activity_credits);
     }
-
+    
+    //Met en pause la musique si on quitte l'activité
     @Override
     protected void onPause() {
-        super.onPause();  // Always call the superclass method first
+        super.onPause();
         creditsTheme.stop();
     }
 }
