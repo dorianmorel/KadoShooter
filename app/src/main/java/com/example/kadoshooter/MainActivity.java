@@ -10,7 +10,6 @@ import android.view.Window;
 
 //Ecran d'accueil du jeu
 public class MainActivity extends AppCompatActivity {
-
     private MediaPlayer mainTheme;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
         mainTheme = MediaPlayer.create(this, R.raw.main_theme);
         mainTheme.start();
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         getSupportActionBar().hide();
-
         setContentView(R.layout.activity_main);
     }
     

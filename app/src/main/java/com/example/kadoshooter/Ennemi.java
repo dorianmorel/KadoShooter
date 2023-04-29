@@ -10,15 +10,12 @@ public class Ennemi {
     private Double direction;
     private Context context;
     private float speed;
-    
+
     //Création de l'ennemi grâce au gif associé, à sa direction, et sa vitesse initiale
     public Ennemi(Context context, GifImageView file, Double direction, float speed){
         this.context=context;
-
         this.gif = file;
-
         this.direction = direction;
-
         this.speed = speed;
     }
     

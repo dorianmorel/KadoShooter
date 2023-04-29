@@ -32,19 +32,15 @@ public class StageOne extends AbstractStage {
     private ArrayList<GifImageView> gifs = new ArrayList<>();
     private ArrayList<Double> directions = new ArrayList<>();
     private ArrayList<Ennemi> ennemies = new ArrayList<>();
-
     private TextView timer;
     private RelativeLayout ecran;
     private int displayWidth;
     private int displayHeight;
-
     // TIMER
     private int sec = 11;
     private Timer countdown;
-
     private TextView accueil;
     private MediaPlayer theme1;
-
     private Context context;
 
     //Création du niveau
@@ -53,24 +49,22 @@ public class StageOne extends AbstractStage {
 
         super.onCreate(savedInstanceState);
         context = this;
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         getSupportActionBar().hide();
-
         setContentView(R.layout.activity_stage_one);
 
         //Lancement du timer
         timer = findViewById(R.id.timer);
         createTimer();
 
+        // Définition de l'écran
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         displayWidth = displayMetrics.widthPixels;
         displayHeight = displayMetrics.heightPixels;
-
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
+        // Musique de fond du niveau
         theme1 = MediaPlayer.create(this, R.raw.theme1);
         theme1.start();
 
@@ -85,18 +79,23 @@ public class StageOne extends AbstractStage {
         //Création et placement des ennemis
         for (int i=0; i < 20; i++) {
 
+            // Lancement d'un son lorsqu'un ennemi meurt
             MediaPlayer koopaDeath = MediaPlayer.create(this, R.raw.koopa_death);
 
+            // Positions des ennemis aléatoires
             int x = (int)(Math.random() * (displayWidth-200));
             int y = (int)(Math.random() * (displayHeight-200));
 
+            // On créé un ennemi Koopa en définissant ses paramètres
             Ennemi koopa = createEnnemi(200, 200, x, y, drawable, 10, this);
 
+            // Gestion de la mort d'un ennemi
             koopa.getGif().setOnClickListener(v -> {
                 ViewGroup parentView = (ViewGroup) v.getParent();
                 koopaDeath.start();
                 parentView.removeView(v);
                 ennemies.remove(koopa);
+                // Fin de partie
                 if (ennemies.size() == 0) {
                     countdown.cancel();
                     timer.setText("");
@@ -157,7 +156,6 @@ public class StageOne extends AbstractStage {
         //if interval is 1, cancel
         if (sec == 1) {
             countdown.cancel();
-
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -172,15 +170,14 @@ public class StageOne extends AbstractStage {
                     });
                 }
             });
-            //endGame();
         }
         return --sec;
     }
 
-
     @Override
     protected void onPause() {
-        super.onPause();  // Always call the superclass method first
+        // Arrêter la musique quand on quitte l'activité
+        super.onPause();
         theme1.stop();
     }
 }

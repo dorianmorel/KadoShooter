@@ -31,15 +31,12 @@ public class StageTwo extends AbstractStage {
     private ArrayList<Ennemi> ennemies = new ArrayList<>();
     private int displayWidth;
     private int displayHeight;
-
     private TextView timer;
     private RelativeLayout ecran;
     private TextView accueil;
-
     // TIMER
     private int sec = 16;
     private Timer countdown;
-
     private MediaPlayer theme2;
 
     //Création du niveau
@@ -47,24 +44,22 @@ public class StageTwo extends AbstractStage {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         getSupportActionBar().hide();
-
         setContentView(R.layout.activity_stage_two);
         
         //Création du timer
         timer = findViewById(R.id.timer2);
         createTimer();
 
+        // Définition de l'écran
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         displayWidth = displayMetrics.widthPixels;
         displayHeight = displayMetrics.heightPixels;
-
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
+        // Musique de fond du niveau
         theme2 = MediaPlayer.create(this, R.raw.theme2);
         theme2.start();
         
@@ -82,7 +77,7 @@ public class StageTwo extends AbstractStage {
                 parentView.removeView(v);
                 goombaDeath.start();
                 ennemies.remove(ennemi);
-                
+
                 //Création de 2 plus petits goombas (simulation d'une division en 2 du goomba initial)
                 Ennemi ennemi1 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY(), R.drawable.goomba, 5, this);
                 ecran.addView(ennemi1.getGif());
@@ -90,6 +85,7 @@ public class StageTwo extends AbstractStage {
                 Ennemi ennemi2 = createEnnemi(150, 150, ennemi.getGif().getX(), ennemi.getGif().getY(), R.drawable.goomba, 5, this);
                 ecran.addView(ennemi2.getGif());
                 ennemies.add(ennemi2);
+                // Gestion de la mort des gros goombas
                 ennemi1.getGif().setOnClickListener(z -> {
                     goombaDeath.start();
                     ecran.removeView(z);
@@ -97,6 +93,7 @@ public class StageTwo extends AbstractStage {
                     if (ennemies.size() == 0)
                         endGame();
                         });
+                // Gestion de la mort des petits goombas
                 ennemi2.getGif().setOnClickListener(r -> {
                     goombaDeath.start();
                     ecran.removeView(r);
@@ -104,7 +101,7 @@ public class StageTwo extends AbstractStage {
                     if (ennemies.size() == 0)
                         endGame();
                 });
-            
+                // Ecran de fin
                 if (ennemies.size() == 0) {
                     ImageView logo = new ImageView(this);
                     logo.setImageResource(R.drawable.kado_logo);
@@ -120,26 +117,21 @@ public class StageTwo extends AbstractStage {
                     });
                 }
             });
-
             ecran.addView(ennemi.getGif());
             ennemies.add(ennemi);
         }
 
-
         //Runnable permettant de mettre à jour la position des ennemis
         Runnable movements = new Runnable() {
             public void run() {
-
                 try {
                     updateMovements(ennemies, displayWidth, displayHeight);
                 }
                 catch (ConcurrentModificationException exception) {
                     // erreur si l'exec prend plus de 20ms
                 }
-
             }
         };
-
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(movements, 0, 20, TimeUnit.MILLISECONDS);
     }
@@ -155,20 +147,17 @@ public class StageTwo extends AbstractStage {
         //performs the specifiedd task at certain intervals
         countdown.scheduleAtFixedRate(new TimerTask()
         {
-            //task to be performed
             public void run()
             {
                 timer.setText(""+seti());
             }
         }, del, per);
-        //set interval
     }
     
     //Mise à jour du timer
     private final int seti() {
         //if interval is 1, cancel
         if (sec == 1) {
-
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -177,7 +166,6 @@ public class StageTwo extends AbstractStage {
             });
             //endGame();
         }
-
         return --sec;
     }
 
@@ -205,7 +193,8 @@ public class StageTwo extends AbstractStage {
 
     @Override
     protected void onPause() {
-        super.onPause();  // Always call the superclass method first
+        // Arrêter la musique quand on quitte l'activité
+        super.onPause();
         theme2.stop();
     }
 }

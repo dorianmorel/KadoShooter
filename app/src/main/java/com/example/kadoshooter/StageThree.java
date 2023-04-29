@@ -35,28 +35,20 @@ public class StageThree extends AbstractStage {
     private ArrayList<Ennemi> ennemies = new ArrayList<>();
     private int displayWidth;
     private int displayHeight;
-
     private TextView timer;
     private Integer if1noFilter;
-
     private Runnable hit;
     private ScheduledExecutorService executorHit;
-
     private MediaPlayer theme3;
     private MediaPlayer bowserDeath;
     private MediaPlayer goombaDeath;
-
     // TIMER
     private int sec = 26;
     private Timer countdown;
-
     private float bowserSpeed = (float) 5;
     private float speed = (float) 5;
-
     private Ennemi bowser;
-
     Context context = this;
-
     private RelativeLayout ecran;
     
     //Création du niveau
@@ -64,40 +56,38 @@ public class StageThree extends AbstractStage {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         getSupportActionBar().hide();
-
         setContentView(R.layout.activity_stage_three);
         
         //Lancement du timer
         timer = findViewById(R.id.timer3);
         createTimer();
 
+        // Définition de l'écran
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         displayWidth = displayMetrics.widthPixels;
         displayHeight = displayMetrics.heightPixels;
-
         ecran = (RelativeLayout) findViewById(R.id.ecran);
 
+        // Musique de fond du niveau
         theme3 = MediaPlayer.create(this, R.raw.theme3);
-        bowserDeath = MediaPlayer.create(this, R.raw.bowser_death);
-        goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
-
         theme3.start();
+        // Son de mort pour Bowser
+        bowserDeath = MediaPlayer.create(this, R.raw.bowser_death);
+        // Son de mort pour les goombas
+        goombaDeath = MediaPlayer.create(this, R.raw.goomba_death);
         
         //Création du Bowser, boss final
         for (int i=0; i < 1; i++) {
-
             // angle aléatoire entre 0 et 360°
             int x = (int)(Math.random() * (displayWidth-700));
             int y = (int)(Math.random() * (displayHeight-700));
 
+            // Création du boss en définissant ses paramètres
             bowser = createEnnemi(700, 700, x, y, R.drawable.bowser, bowserSpeed, this);
-            
-            
+
             //Définition des actions menées lorsque l'on clique sur Bowser
             bowser.getGif().setOnClickListener(v -> {
                 if1noFilter = 0;
@@ -113,7 +103,6 @@ public class StageThree extends AbstractStage {
                         }
                         if1noFilter++;
                     }
-
                     public void clearBowserFilter() {
                         bowser.getGif().clearColorFilter();
                     }
@@ -121,7 +110,7 @@ public class StageThree extends AbstractStage {
                 executorHit = Executors.newScheduledThreadPool(1);
                 executorHit.scheduleAtFixedRate(hit, 0, 100, TimeUnit.MILLISECONDS);
                 
-                //Si on clique 100 fois sur Bowser, il meurt
+                // Si on clique 100 fois sur Bowser, il meurt
                 nbClick++;
                 if(nbClick==100){
                     ViewGroup parentView = (ViewGroup) v.getParent();
@@ -130,11 +119,12 @@ public class StageThree extends AbstractStage {
                     bowserDeath.start();
                 }
                 
-                //Tous les 5 clics sur Bowser, sa vitesse augmente
+                // Tous les 5 clics sur Bowser, sa vitesse augmente
                 if(nbClick%5==0){
                     bowser.setSpeed(bowser.getSpeed() + 4);
                 }
 
+                // Ecran de fin
                 if (ennemies.size() == 0) {
                     countdown.cancel();
                     timer.setText("");
@@ -158,7 +148,6 @@ public class StageThree extends AbstractStage {
         //Création d'un goomba toutes les secondes et demi ainsi que mise à jour de la position des ennemis
         Runnable movements = new Runnable() {
             private int counter = 0;
-
             public void run() {
                 counter+=20;
                 try {
@@ -166,8 +155,6 @@ public class StageThree extends AbstractStage {
                         if (ennemies.get(0).getSpeed() != 5)
                             createGoomba();
                     }
-
-
                     updateMovements(ennemies, displayWidth, displayHeight);
                 }
                 catch (ConcurrentModificationException exception) {
@@ -175,10 +162,8 @@ public class StageThree extends AbstractStage {
                 }
                 catch (Exception exception) {
                 }
-
             }
         };
-
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(movements, 0, 20, TimeUnit.MILLISECONDS);
     }
@@ -189,7 +174,8 @@ public class StageThree extends AbstractStage {
 
     @Override
     protected void onPause() {
-        super.onPause();  // Always call the superclass method first
+        // Arrêter la musique quand on quitte l'activité
+        super.onPause();
         theme3.stop();
     }
     
@@ -240,13 +226,10 @@ public class StageThree extends AbstractStage {
     
     //Création du timer
     private void createTimer() {
-        //set delay and period as 1000
         int del = 500;
         int per = 1000;
         countdown = new Timer();
         timer.setTextSize(200);
-        //System.out.println(sec);
-        //performs the specifiedd task at certain intervals
         countdown.scheduleAtFixedRate(new TimerTask()
         {
             //task to be performed
@@ -255,7 +238,6 @@ public class StageThree extends AbstractStage {
                 timer.setText(""+seti());
             }
         }, del, per);
-        //set interval
     }
     
     //Fonction permettant la mise à jour du timer
@@ -278,7 +260,6 @@ public class StageThree extends AbstractStage {
                     });
                 }
             });
-            //endGame();
         }
         return --sec;
     }

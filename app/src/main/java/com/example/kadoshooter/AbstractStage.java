@@ -67,7 +67,6 @@ public abstract class AbstractStage extends AppCompatActivity {
     
     //Fonction permettant de lancer le processus de fin d'un niveau, lorsque l'on perd / gagne
     public static void endGame(ArrayList<Ennemi> ennemies, RelativeLayout ecran, TextView timer, Context context) {
-
         for (Ennemi ennemi : ennemies) {
             ecran.removeView(ennemi.getGif());
         }
@@ -76,5 +75,4 @@ public abstract class AbstractStage extends AppCompatActivity {
         logo.setImageResource(R.drawable.kado_logo);
         ecran.addView(logo);
     }
-
 }
